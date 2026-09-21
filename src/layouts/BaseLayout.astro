@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+// Vite giver den hashede URL, saa skriften kan praeloades praecist.
+import displayFont from '@fontsource/instrument-serif/files/instrument-serif-latin-400-normal.woff2?url';
 import settings from '../data/settings.json';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -30,6 +32,9 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta name="theme-color" content="#f7f7f5" />
+    <!-- Display-skriften bruges i hero over folden og skal vaere klar med det
+         samme. Uden det her skifter teksten skrift midt i animationen. -->
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <!-- Markerer at JavaScript koerer, saa indhold der venter paa en animation
          kan vises med det samme hvis det ikke goer. -->
