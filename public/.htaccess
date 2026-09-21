@@ -1,0 +1,28 @@
+# Statisk site bygget med Astro. Apache skal kun vide tre ting.
+
+# 1. Brug vores egen 404-side i stedet for Apaches standard.
+ErrorDocument 404 /404.html
+
+# 2. Testmiljoet maa ikke indekseres. Reglen rammer kun hostnavne der
+#    starter med "new.", saa produktionsdomaenet er upaavirket og
+#    ingen skal huske at fjerne noget ved lancering.
+<IfModule mod_setenvif.c>
+  SetEnvIf Host "^new\." NOINDEX=1
+</IfModule>
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow" env=NOINDEX
+</IfModule>
+
+# 3. Komprimering, og lang cache paa de hashede assets i _astro/.
+#    HTML caches ikke, saa en ny deploy slaar igennem med det samme.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/xml text/plain \
+    application/javascript application/json image/svg+xml
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
