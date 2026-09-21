@@ -75,15 +75,30 @@ img {
   color: var(--color-muted);
 }
 
-/* AnimatedContent skjuler sig selv med .invisible. Uden JavaScript vises
-   indholdet med det samme, saa siden aldrig staar tom. */
-.invisible { visibility: hidden; }
-:root:not(.js) .invisible { visibility: visible !important; }
-
-/* BlurText saetter sine ord som inline-block og forventer flex fra Tailwind. */
-.blur-text { display: flex; flex-wrap: wrap; }
+/* Indhold der glider ind naar det scroller i syne. Klassen .in saettes af
+   observeren i BaseLayout. Uden JavaScript vises indholdet med det samme. */
+.reveal {
+  opacity: 0;
+  transform: translateY(2rem);
+  transition:
+    opacity var(--duration-slow) ease,
+    transform var(--duration-slow) var(--ease-out-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+:root:not(.js) .reveal {
+  opacity: 1;
+  transform: none;
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .invisible { visibility: visible; }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }

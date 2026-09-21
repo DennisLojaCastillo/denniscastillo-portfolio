@@ -1,0 +1,64 @@
+---
+/**
+ * Overskrift hvor ordene stiger op og skarpstiller fra blur, forskudt.
+ * Samme effekt som React Bits' BlurText, men i CSS og uden JavaScript.
+ */
+interface Props {
+  text: string;
+  as?: 'h1' | 'h2' | 'h3' | 'p';
+  class?: string;
+  /** Millisekunder mellem hvert ord. */
+  stagger?: number;
+}
+
+const { text, as: Tag = 'h1', class: className = '', stagger = 110 } = Astro.props;
+const words = text.split(' ');
+---
+
+<Tag class:list={['blur-heading', className]}>
+  {
+    words.map((word, i) => (
+      <span class="word" style={`--delay:${i * stagger + 120}ms`}>
+        {word}
+      </span>
+    ))
+  }
+</Tag>
+
+<style>
+  .blur-heading {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.26em;
+  }
+  .word {
+    display: inline-block;
+    animation: word-in 1.05s var(--ease-out-soft) backwards;
+    animation-delay: var(--delay);
+    will-change: transform, filter, opacity;
+  }
+
+  /* Tre trin frem for to. Det er forskellen der goer overgangen bloed
+     i stedet for at ordet bare glider paa plads. */
+  @keyframes word-in {
+    0% {
+      opacity: 0;
+      transform: translateY(0.42em);
+      filter: blur(12px);
+    }
+    55% {
+      opacity: 0.55;
+      transform: translateY(-0.04em);
+      filter: blur(4px);
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .word { animation: none; }
+  }
+</style>

@@ -1,0 +1,17 @@
+---
+/**
+ * Indhold der glider ind naar det scroller i syne. Observeren ligger i
+ * BaseLayout, saa den koeres én gang uanset hvor mange Reveal der er paa siden.
+ */
+interface Props {
+  class?: string;
+  /** Millisekunder foer indholdet begynder at glide ind. */
+  delay?: number;
+}
+
+const { class: className = '', delay = 0 } = Astro.props;
+---
+
+<div class:list={['reveal', className]} style={delay ? `--reveal-delay:${delay}ms` : undefined}>
+  <slot />
+</div>

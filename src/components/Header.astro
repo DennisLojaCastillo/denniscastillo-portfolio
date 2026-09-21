@@ -1,6 +1,6 @@
 ---
 import settings from '../data/settings.json';
-import { Badge } from './Motion';
+import Shimmer from './Shimmer.astro';
 
 interface Props {
   availability?: string;
@@ -13,7 +13,7 @@ const path = Astro.url.pathname;
 <header>
   <a class="wordmark" href="/">{settings.siteName}</a>
 
-  {availability && <Badge client:idle text={availability} className="availability" />}
+  {availability && <Shimmer text={availability} class="availability" />}
 
   <nav aria-label="Primær">
     {
@@ -63,7 +63,6 @@ const path = Astro.url.pathname;
 </style>
 
 <style is:global>
-  /* ShinyText renderer sit eget span, saa reglen kan ikke vaere scoped. */
   .availability {
     display: inline-block;
     font-size: 0.6875rem;

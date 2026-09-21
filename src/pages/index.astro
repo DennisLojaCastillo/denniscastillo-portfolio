@@ -4,7 +4,8 @@ import settings from '../data/settings.json';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Marquee from '../components/Marquee.astro';
 import CaseList from '../components/CaseList.astro';
-import { Heading, Reveal } from '../components/Motion';
+import BlurHeading from '../components/BlurHeading.astro';
+import Reveal from '../components/Reveal.astro';
 
 const page = await getEntry('pages', 'forside');
 if (!page) throw new Error('src/content/pages/forside.md mangler');
@@ -21,14 +22,13 @@ const featured = cases.slice(0, 5);
   availability={page.data.availability}
 >
   <section class="hero">
-    <Heading
-      client:load
+    <BlurHeading
       as="h1"
       text={page.data.heroTitle ?? page.data.title}
-      delay={110}
-      className="hero-title display"
+      stagger={110}
+      class="hero-title display"
     />
-    <Reveal client:visible delay={0.55} distance={24} className="hero-meta">
+    <Reveal delay={700} class="hero-meta">
       <p>{page.data.heroText}</p>
       <span class="eyebrow">Scroll</span>
     </Reveal>
@@ -40,7 +40,7 @@ const featured = cases.slice(0, 5);
     <h2 class="eyebrow">Udvalgt arbejde</h2>
     {
       featured.length > 0 ? (
-        <Reveal client:visible>
+        <Reveal>
           <CaseList items={featured} />
         </Reveal>
       ) : (
@@ -57,7 +57,7 @@ const featured = cases.slice(0, 5);
   <section id="om" class="about">
     <h2 class="eyebrow">Om</h2>
     <div class="about-top">
-      <Reveal client:visible>
+      <Reveal>
         <p class="lead display">{page.data.aboutLead}</p>
       </Reveal>
       <div class="portrait">
@@ -72,7 +72,7 @@ const featured = cases.slice(0, 5);
     </div>
     {
       page.data.aboutText.length > 0 && (
-        <Reveal client:visible delay={0.12}>
+        <Reveal delay={120}>
           <div class="about-cols">
             {page.data.aboutText.map((t) => <p>{t}</p>)}
           </div>
@@ -83,7 +83,7 @@ const featured = cases.slice(0, 5);
 
   <section id="kontakt" class="contact">
     <h2 class="eyebrow">Kontakt</h2>
-    <Reveal client:visible>
+    <Reveal>
       <p class="contact-heading display">{page.data.contactHeading}</p>
       <a class="mail display" href={`mailto:${settings.email}`}>{settings.email}</a>
     </Reveal>

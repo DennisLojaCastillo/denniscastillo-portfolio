@@ -43,6 +43,29 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     </main>
     <Footer />
 
+    <script>
+      // Viser .reveal-elementer naar de scroller i syne. Cirka 15 linjer,
+      // og erstatter GSAP med ScrollTrigger.
+      const reveals = document.querySelectorAll('.reveal');
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        reveals.forEach((el) => el.classList.add('in'));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('in');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { rootMargin: '0px 0px -12% 0px' }
+        );
+        reveals.forEach((el) => io.observe(el));
+      }
+    </script>
+
     <style>
       .skip {
         position: absolute;
