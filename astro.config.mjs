@@ -7,7 +7,11 @@ import tailwindcss from '@tailwindcss/vite';
 // Bruges til sitemap og absolutte URL'er.
 export default defineConfig({
   site: 'https://denniscastillo.dk',
-  integrations: [mdx(), sitemap()],
+  integrations: [
+    mdx(),
+    // Designsiderne er midlertidige og hoerer ikke hjemme i sitemap'et.
+    sitemap({ filter: (page) => !page.includes('/design') }),
+  ],
   vite: {
     plugins: [tailwindcss()],
   },

@@ -1,0 +1,38 @@
+{
+  "note": "Midlertidige data til designsammenligning. Slettes naar en retning er valgt.",
+  "name": "Dennis Castillo",
+  "role": "Web design og udvikling",
+  "heroA": "Jeg designer og bygger websites der holder",
+  "heroB": "Design og kode, fra første skitse til drift",
+  "lead": "Freelance web designer og udvikler fra Sjælland. Jeg arbejder helst hele vejen: research, design, kode og den drift der kommer bagefter. Det giver færre overleveringer og et resultat der faktisk kan vedligeholdes.",
+  "cases": [
+    {
+      "title": "Villa Monteleone",
+      "client": "Monteleone",
+      "year": 2026,
+      "services": ["Design", "Udvikling"],
+      "excerpt": "Præsentationssite for en italiensk vinejendom, bygget til langsom scrolling og store billeder."
+    },
+    {
+      "title": "Efficio Indsats",
+      "client": "Efficio",
+      "year": 2026,
+      "services": ["Design", "Tekst", "Udvikling"],
+      "excerpt": "Ydelsessite for en rådgivningsvirksomhed. Kort vej fra forside til kontakt."
+    },
+    {
+      "title": "Home Prisberegner",
+      "client": "home",
+      "year": 2025,
+      "services": ["Produktdesign", "Frontend"],
+      "excerpt": "Beregner der oversætter en kompliceres prisstruktur til fire spørgsmål."
+    },
+    {
+      "title": "CVR Integration",
+      "client": "ZRM",
+      "year": 2025,
+      "services": ["Design", "Udvikling"],
+      "excerpt": "Produktsite for en dansk CVR-datatjeneste, med dokumentation som førsteklasses indhold."
+    }
+  ]
+}
