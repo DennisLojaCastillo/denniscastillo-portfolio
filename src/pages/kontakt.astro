@@ -1,0 +1,45 @@
+---
+import { getEntry, render } from 'astro:content';
+import settings from '../data/settings.json';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const page = await getEntry('pages', 'kontakt');
+if (!page) throw new Error('src/content/pages/kontakt.md mangler');
+const { Content } = await render(page);
+
+const sent = Astro.url.searchParams.get('sendt') === '1';
+const failed = Astro.url.searchParams.get('fejl') === '1';
+---
+
+<BaseLayout title={page.data.title} description={page.data.description}>
+  <h1 class="mb-6 text-3xl font-medium tracking-tight">{page.data.title}</h1>
+  <div class="prose-sm mb-10 max-w-none">
+    <Content />
+  </div>
+
+  {sent && <p class="mb-8 border border-[--color-line] p-4 text-sm">Tak, beskeden er sendt.</p>}
+  {failed && <p class="mb-8 border border-[--color-line] p-4 text-sm">Beskeden kunne ikke sendes. Skriv i stedet til {settings.email}.</p>}
+
+  <form action="/kontakt.php" method="post" class="max-w-md space-y-6">
+    <div>
+      <label for="navn" class="block text-sm">Navn</label>
+      <input id="navn" name="navn" type="text" required class="mt-2 w-full border border-[--color-line] px-3 py-2" />
+    </div>
+    <div>
+      <label for="email" class="block text-sm">Email</label>
+      <input id="email" name="email" type="email" required class="mt-2 w-full border border-[--color-line] px-3 py-2" />
+    </div>
+    <div>
+      <label for="besked" class="block text-sm">Besked</label>
+      <textarea id="besked" name="besked" rows="6" required class="mt-2 w-full border border-[--color-line] px-3 py-2"></textarea>
+    </div>
+
+    <div class="absolute left-[-9999px]" aria-hidden="true">
+      <label for="website">Lad dette felt staa tomt</label>
+      <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+    <input type="hidden" name="tid" value={Date.now()} />
+
+    <button type="submit" class="border border-[--color-ink] px-5 py-2 text-sm">Send</button>
+  </form>
+</BaseLayout>

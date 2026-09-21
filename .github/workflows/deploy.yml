@@ -1,0 +1,55 @@
+name: Deploy til Simply
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-simply
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Hent koden
+        uses: actions/checkout@v4
+
+      - name: Opsaet Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installer afhaengigheder
+        run: npm ci
+
+      - name: Byg
+        run: npm run build
+
+      - name: Opsaet SSH-noegle
+        env:
+          SSH_KEY: ${{ secrets.SIMPLY_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ssh.simply.com >> ~/.ssh/known_hosts
+
+      - name: Upload til Simply
+        env:
+          SIMPLY_USER: ${{ secrets.SIMPLY_USER }}
+          SIMPLY_PATH: ${{ secrets.SIMPLY_PATH }}
+        run: |
+          rsync -az --delete \
+            --exclude '.well-known' \
+            --exclude 'kontakt-log/' \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
+            dist/ "$SIMPLY_USER@ssh.simply.com:$SIMPLY_PATH"
+
+      - name: Ryd op
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const cases = (await getCollection('cases', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+---
+
+<BaseLayout title="Cases" description="Udvalgte opgaver.">
+  <h1 class="mb-10 text-3xl font-medium tracking-tight">Cases</h1>
+  <ul class="divide-y divide-[--color-line] border-y border-[--color-line]">
+    {
+      cases.map((item) => (
+        <li>
+          <a href={`/cases/${item.id}`} class="block py-6">
+            <div class="flex items-baseline justify-between gap-6">
+              <h2 class="font-medium">{item.data.title}</h2>
+              <span class="text-sm text-[--color-muted]">{item.data.year}</span>
+            </div>
+            {item.data.excerpt && <p class="mt-2 text-sm text-[--color-muted]">{item.data.excerpt}</p>}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

@@ -1,0 +1,52 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const cases = await getCollection('cases', ({ data }) => !data.draft);
+  return cases.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+};
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.excerpt}>
+  <article>
+    <h1 class="text-3xl font-medium tracking-tight">{entry.data.title}</h1>
+    <dl class="mt-6 flex flex-wrap gap-x-8 gap-y-2 text-sm text-[--color-muted]">
+      {entry.data.client && (<><dt class="sr-only">Kunde</dt><dd>{entry.data.client}</dd></>)}
+      {entry.data.year && (<><dt class="sr-only">År</dt><dd>{entry.data.year}</dd></>)}
+      {entry.data.services.length > 0 && (<><dt class="sr-only">Ydelser</dt><dd>{entry.data.services.join(', ')}</dd></>)}
+    </dl>
+
+    {
+      entry.data.cover && (
+        <img src={entry.data.cover} alt="" class="mt-10 w-full rounded" loading="lazy" decoding="async" />
+      )
+    }
+
+    <div class="prose-sm mt-10 max-w-none">
+      <Content />
+    </div>
+
+    {
+      entry.data.gallery.length > 0 && (
+        <div class="mt-10 grid gap-4 sm:grid-cols-2">
+          {entry.data.gallery.map((src) => (
+            <img src={src} alt="" class="w-full rounded" loading="lazy" decoding="async" />
+          ))}
+        </div>
+      )
+    }
+
+    {
+      entry.data.url && (
+        <a href={entry.data.url} class="mt-10 inline-block border-b border-[--color-ink] pb-1 text-sm" rel="noopener">
+          Se live
+        </a>
+      )
+    }
+  </article>
+</BaseLayout>

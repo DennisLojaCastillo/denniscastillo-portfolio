@@ -1,0 +1,15 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const page = await getEntry('pages', 'om');
+if (!page) throw new Error('src/content/pages/om.md mangler');
+const { Content } = await render(page);
+---
+
+<BaseLayout title={page.data.title} description={page.data.description}>
+  <h1 class="mb-10 text-3xl font-medium tracking-tight">{page.data.title}</h1>
+  <div class="prose-sm max-w-none">
+    <Content />
+  </div>
+</BaseLayout>

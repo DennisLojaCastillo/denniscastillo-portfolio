@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+const fmt = new Intl.DateTimeFormat('da-DK', { dateStyle: 'long', timeZone: 'UTC' });
+---
+
+<BaseLayout title="Blog" description="Noter og artikler.">
+  <h1 class="mb-10 text-3xl font-medium tracking-tight">Blog</h1>
+  <ul class="divide-y divide-[--color-line] border-y border-[--color-line]">
+    {
+      posts.map((post) => (
+        <li>
+          <a href={`/blog/${post.id}`} class="block py-6">
+            <div class="flex items-baseline justify-between gap-6">
+              <h2 class="font-medium">{post.data.title}</h2>
+              <time datetime={post.data.date.toISOString()} class="text-sm text-[--color-muted]">
+                {fmt.format(post.data.date)}
+              </time>
+            </div>
+            {post.data.excerpt && <p class="mt-2 text-sm text-[--color-muted]">{post.data.excerpt}</p>}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

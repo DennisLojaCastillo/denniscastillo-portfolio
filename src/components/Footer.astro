@@ -1,0 +1,21 @@
+---
+import settings from '../data/settings.json';
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-[--color-line]">
+  <div
+    class="mx-auto flex w-full max-w-3xl flex-col gap-4 px-6 py-10 text-sm text-[--color-muted] sm:flex-row sm:items-center sm:justify-between"
+  >
+    <p>{year} {settings.footerText}</p>
+    <div class="flex gap-6">
+      {
+        settings.social.map((item) => (
+          <a href={item.url} class="hover:text-[--color-ink]" rel="me noopener">
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,124 @@
+media:
+  input: public/uploads
+  output: /uploads
+
+content:
+  - name: cases
+    label: Cases
+    type: collection
+    path: src/content/cases
+    filename: "{fields.title}.md"
+    format: yaml-frontmatter
+    subfolders: false
+    view:
+      fields: [title, client, year]
+      primary: title
+      sort: [order, year, title]
+      order: asc
+    fields:
+      - { name: title, label: Titel, type: string, required: true }
+      - { name: client, label: Kunde, type: string }
+      - { name: year, label: År, type: number }
+      - { name: order, label: Rækkefølge, type: number, description: "Lavest tal vises først" }
+      - { name: services, label: Ydelser, type: string, list: true }
+      - { name: excerpt, label: Uddrag, type: text }
+      - { name: cover, label: Cover, type: image }
+      - { name: gallery, label: Galleri, type: image, list: true }
+      - { name: url, label: Live-link, type: string }
+      - { name: draft, label: Kladde, type: boolean }
+      - { name: body, label: Indhold, type: rich-text }
+
+  - name: blog
+    label: Blog
+    type: collection
+    path: src/content/blog
+    filename: "{fields.title}.md"
+    format: yaml-frontmatter
+    subfolders: false
+    view:
+      fields: [title, date]
+      primary: title
+      sort: [date]
+      order: desc
+    fields:
+      - { name: title, label: Titel, type: string, required: true }
+      - { name: date, label: Dato, type: date, required: true }
+      - { name: tags, label: Tags, type: string, list: true }
+      - { name: excerpt, label: Uddrag, type: text }
+      - { name: cover, label: Cover, type: image }
+      - { name: draft, label: Kladde, type: boolean }
+      - { name: body, label: Indhold, type: rich-text }
+
+  - name: forside
+    label: Forside
+    type: file
+    path: src/content/pages/forside.md
+    format: yaml-frontmatter
+    fields:
+      - { name: title, label: Titel, type: string, required: true }
+      - { name: description, label: SEO-beskrivelse, type: text }
+      - { name: heroTitle, label: Hero-overskrift, type: string }
+      - { name: heroText, label: Hero-tekst, type: text }
+      - { name: heroCtaLabel, label: Knap-tekst, type: string }
+      - { name: heroCtaUrl, label: Knap-link, type: string }
+      - name: services
+        label: Ydelser
+        type: object
+        list:
+          collapsible:
+            summary: "{fields.title}"
+        fields:
+          - { name: title, label: Titel, type: string }
+          - { name: text, label: Tekst, type: text }
+      - { name: body, label: Indhold, type: rich-text }
+
+  - name: om
+    label: Om
+    type: file
+    path: src/content/pages/om.md
+    format: yaml-frontmatter
+    fields:
+      - { name: title, label: Titel, type: string, required: true }
+      - { name: description, label: SEO-beskrivelse, type: text }
+      - { name: body, label: Indhold, type: rich-text }
+
+  - name: kontakt
+    label: Kontakt
+    type: file
+    path: src/content/pages/kontakt.md
+    format: yaml-frontmatter
+    fields:
+      - { name: title, label: Titel, type: string, required: true }
+      - { name: description, label: SEO-beskrivelse, type: text }
+      - { name: body, label: Indhold, type: rich-text }
+
+  - name: settings
+    label: Opsætning
+    type: file
+    path: src/data/settings.json
+    format: json
+    fields:
+      - { name: siteName, label: Sitenavn, type: string }
+      - { name: tagline, label: Tagline, type: string }
+      - { name: seoTitle, label: SEO-titel, type: string }
+      - { name: seoDescription, label: SEO-beskrivelse, type: text }
+      - { name: email, label: Kontakt-email, type: string }
+      - name: nav
+        label: Navigation
+        type: object
+        list:
+          collapsible:
+            summary: "{fields.label}"
+        fields:
+          - { name: label, label: Tekst, type: string }
+          - { name: url, label: Link, type: string }
+      - name: social
+        label: Sociale links
+        type: object
+        list:
+          collapsible:
+            summary: "{fields.label}"
+        fields:
+          - { name: label, label: Tekst, type: string }
+          - { name: url, label: Link, type: string }
+      - { name: footerText, label: Footer-tekst, type: string }

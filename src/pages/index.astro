@@ -1,0 +1,61 @@
+---
+import { getEntry, getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const page = await getEntry('pages', 'forside');
+if (!page) throw new Error('src/content/pages/forside.md mangler');
+const { Content } = await render(page);
+
+const cases = (await getCollection('cases', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+---
+
+<BaseLayout title={page.data.title} description={page.data.description}>
+  <section class="mb-20">
+    <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">{page.data.heroTitle}</h1>
+    {page.data.heroText && <p class="mt-6 max-w-xl text-lg text-[--color-muted]">{page.data.heroText}</p>}
+    {
+      page.data.heroCtaLabel && page.data.heroCtaUrl && (
+        <a href={page.data.heroCtaUrl} class="mt-8 inline-block border-b border-[--color-ink] pb-1 text-sm">
+          {page.data.heroCtaLabel}
+        </a>
+      )
+    }
+  </section>
+
+  {
+    page.data.services.length > 0 && (
+      <section class="mb-20 grid gap-8 sm:grid-cols-3">
+        {page.data.services.map((service) => (
+          <div>
+            <h2 class="text-sm font-medium">{service.title}</h2>
+            {service.text && <p class="mt-2 text-sm text-[--color-muted]">{service.text}</p>}
+          </div>
+        ))}
+      </section>
+    )
+  }
+
+  <section class="prose-sm mb-20 max-w-none">
+    <Content />
+  </section>
+
+  {
+    cases.length > 0 && (
+      <section>
+        <h2 class="mb-6 text-sm font-medium">Udvalgte cases</h2>
+        <ul class="divide-y divide-[--color-line] border-y border-[--color-line]">
+          {cases.map((item) => (
+            <li>
+              <a href={`/cases/${item.id}`} class="flex items-baseline justify-between gap-6 py-4">
+                <span>{item.data.title}</span>
+                <span class="text-sm text-[--color-muted]">{item.data.client}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>
