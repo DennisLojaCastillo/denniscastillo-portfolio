@@ -32,6 +32,22 @@ Push til `main` udloeser GitHub Actions, der bygger og synkroniserer `dist/` til
 
 Rollback: revert commit'et og push. Naeste build lægger den forrige version op igen.
 
+### Spaerre mod forkert sti
+
+rsync koerer med `--delete`. Peger `SIMPLY_PATH` et forkert sted hen, ville den rydde den forkerte mappe. Workflow'et tjekker derfor tre ting foer det roerer serveren:
+
+1. `SIMPLY_PATH` og `SIMPLY_USER` er ikke tomme, og stien er absolut.
+2. Stien er mindst fire niveauer dyb. Det blokerer `/`, `/var`, `/var/www` og kontoens rodmappe, hvor naboprojekter ligger side om side.
+3. Filen `.deploy-ok` findes i maalmappen. Er stien forkert, findes filen ikke, og deploy stopper foer rsync starter.
+
+Markoerfilen oprettes en gang:
+
+```bash
+ssh <bruger>@ssh.simply.com "touch <sti>/.deploy-ok"
+```
+
+rsync ekskluderer den, saa `--delete` ikke fjerner den igen. Skal siden senere flyttes til en anden mappe, oprettes markoerfilen i den nye mappe foerst.
+
 ### Secrets der skal findes i repo'et
 
 | Secret | Vaerdi |

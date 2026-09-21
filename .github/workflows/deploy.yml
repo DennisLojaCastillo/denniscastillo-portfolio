@@ -39,16 +39,57 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ssh.simply.com >> ~/.ssh/known_hosts
 
-      - name: Upload til Simply
+      # Spaerre. rsync koerer med --delete, saa en forkert sti kunne rydde
+      # naboprojekter. Tre tjek skal passere foer der roeres ved serveren.
+      - name: Kontroller deploy-maal
         env:
           SIMPLY_USER: ${{ secrets.SIMPLY_USER }}
           SIMPLY_PATH: ${{ secrets.SIMPLY_PATH }}
         run: |
+          set -euo pipefail
+
+          if [ -z "${SIMPLY_PATH:-}" ] || [ -z "${SIMPLY_USER:-}" ]; then
+            echo "::error::SIMPLY_PATH eller SIMPLY_USER er tom."
+            exit 1
+          fi
+
+          # Normaliser: fjern alle afsluttende skraastreger.
+          TARGET="${SIMPLY_PATH%"${SIMPLY_PATH##*[!/]}"}"
+
+          case "$TARGET" in
+            /*) ;;
+            *) echo "::error::SIMPLY_PATH skal vaere en absolut sti: $SIMPLY_PATH"; exit 1 ;;
+          esac
+
+          # Tjek 1: mindst fire niveauer dybt. Blokerer /, /var, /var/www
+          # og kontoens rodmappe /var/www/<domaene>, hvor naboprojekterne ligger.
+          DEPTH=$(printf '%s' "${TARGET#/}" | awk -F/ '{print NF}')
+          if [ "$DEPTH" -lt 4 ]; then
+            echo "::error::SIMPLY_PATH er for taet paa roden og kunne ramme andre projekter: $TARGET"
+            exit 1
+          fi
+
+          # Tjek 2: markoerfilen skal findes i maalmappen. Er stien forkert,
+          # findes filen ikke, og deploy stopper foer rsync overhovedet starter.
+          if ! ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
+                 "$SIMPLY_USER@ssh.simply.com" "test -f '$TARGET/.deploy-ok'"; then
+            echo "::error::Markoerfilen .deploy-ok findes ikke i $TARGET. Deploy afbrudt."
+            echo "Opret den med: ssh $SIMPLY_USER@ssh.simply.com \"touch $TARGET/.deploy-ok\""
+            exit 1
+          fi
+
+          echo "DEPLOY_TARGET=$TARGET" >> "$GITHUB_ENV"
+          echo "Maal godkendt: $TARGET"
+
+      - name: Upload til Simply
+        env:
+          SIMPLY_USER: ${{ secrets.SIMPLY_USER }}
+        run: |
           rsync -az --delete \
+            --exclude '.deploy-ok' \
             --exclude '.well-known' \
-            --exclude 'kontakt-log/' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
-            dist/ "$SIMPLY_USER@ssh.simply.com:$SIMPLY_PATH"
+            dist/ "$SIMPLY_USER@ssh.simply.com:$DEPLOY_TARGET/"
 
       - name: Ryd op
         if: always()
