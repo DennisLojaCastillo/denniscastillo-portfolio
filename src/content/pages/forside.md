@@ -1,8 +1,9 @@
 ---
 title: Forside
 description: Portfolio for Dennis Castillo, web design og udvikling.
-heroTitle: Jeg designer og bygger websites der holder
-heroText: Freelance web design og udvikling fra Sjælland. Fra første skitse til kode i drift.
+heroTitle: Jeg designer og bygger websites der holder TESTER
+heroText: Freelance web design og udvikling fra Sjælland. Fra første skitse til
+  kode i drift.
 heroCtaLabel: Se cases
 heroCtaUrl: /cases
 services:
@@ -13,5 +14,4 @@ services:
   - title: Drift
     text: Automatisk deploy, så en rettelse er live et minut senere.
 ---
-
 Skriv en kort introduktion her. Teksten kan redigeres i Pages CMS.
