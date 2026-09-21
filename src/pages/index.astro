@@ -1,61 +1,206 @@
 ---
-import { getEntry, getCollection, render } from 'astro:content';
+import { getEntry, getCollection } from 'astro:content';
+import settings from '../data/settings.json';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Marquee from '../components/Marquee.astro';
+import CaseList from '../components/CaseList.astro';
+import { Heading, Reveal } from '../components/Motion';
 
 const page = await getEntry('pages', 'forside');
 if (!page) throw new Error('src/content/pages/forside.md mangler');
-const { Content } = await render(page);
 
-const cases = (await getCollection('cases', ({ data }) => !data.draft))
-  .sort((a, b) => a.data.order - b.data.order)
-  .slice(0, 3);
+const cases = (await getCollection('cases', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const featured = cases.slice(0, 5);
 ---
 
-<BaseLayout title={page.data.title} description={page.data.description}>
-  <section class="mb-20">
-    <h1 class="text-4xl font-medium tracking-tight sm:text-5xl">{page.data.heroTitle}</h1>
-    {page.data.heroText && <p class="mt-6 max-w-xl text-lg text-[--color-muted]">{page.data.heroText}</p>}
+<BaseLayout
+  title={page.data.title}
+  description={page.data.description}
+  availability={page.data.availability}
+>
+  <section class="hero">
+    <Heading
+      client:load
+      as="h1"
+      text={page.data.heroTitle ?? page.data.title}
+      delay={110}
+      className="hero-title display"
+    />
+    <Reveal client:visible delay={0.55} distance={24} className="hero-meta">
+      <p>{page.data.heroText}</p>
+      <span class="eyebrow">Scroll</span>
+    </Reveal>
+  </section>
+
+  <Marquee items={page.data.marquee} />
+
+  <section id="arbejde" class="work">
+    <h2 class="eyebrow">Udvalgt arbejde</h2>
     {
-      page.data.heroCtaLabel && page.data.heroCtaUrl && (
-        <a href={page.data.heroCtaUrl} class="mt-8 inline-block border-b border-[--color-ink] pb-1 text-sm">
-          {page.data.heroCtaLabel}
-        </a>
+      featured.length > 0 ? (
+        <Reveal client:visible>
+          <CaseList items={featured} />
+        </Reveal>
+      ) : (
+        <p class="empty">Ingen cases endnu. Opret den første i Pages CMS.</p>
+      )
+    }
+    {
+      cases.length > featured.length && (
+        <a class="more" href="/cases">Se alle {cases.length} cases</a>
       )
     }
   </section>
 
-  {
-    page.data.services.length > 0 && (
-      <section class="mb-20 grid gap-8 sm:grid-cols-3">
-        {page.data.services.map((service) => (
-          <div>
-            <h2 class="text-sm font-medium">{service.title}</h2>
-            {service.text && <p class="mt-2 text-sm text-[--color-muted]">{service.text}</p>}
+  <section id="om" class="about">
+    <h2 class="eyebrow">Om</h2>
+    <div class="about-top">
+      <Reveal client:visible>
+        <p class="lead display">{page.data.aboutLead}</p>
+      </Reveal>
+      <div class="portrait">
+        {
+          page.data.portrait ? (
+            <img src={page.data.portrait} alt={page.data.portraitAlt ?? ''} width="720" height="900" loading="lazy" decoding="async" />
+          ) : (
+            <div class="portrait-slot" aria-hidden="true"><span class="eyebrow">Portræt</span></div>
+          )
+        }
+      </div>
+    </div>
+    {
+      page.data.aboutText.length > 0 && (
+        <Reveal client:visible delay={0.12}>
+          <div class="about-cols">
+            {page.data.aboutText.map((t) => <p>{t}</p>)}
           </div>
-        ))}
-      </section>
-    )
-  }
-
-  <section class="prose-sm mb-20 max-w-none">
-    <Content />
+        </Reveal>
+      )
+    }
   </section>
 
-  {
-    cases.length > 0 && (
-      <section>
-        <h2 class="mb-6 text-sm font-medium">Udvalgte cases</h2>
-        <ul class="divide-y divide-[--color-line] border-y border-[--color-line]">
-          {cases.map((item) => (
-            <li>
-              <a href={`/cases/${item.id}`} class="flex items-baseline justify-between gap-6 py-4">
-                <span>{item.data.title}</span>
-                <span class="text-sm text-[--color-muted]">{item.data.client}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    )
-  }
+  <section id="kontakt" class="contact">
+    <h2 class="eyebrow">Kontakt</h2>
+    <Reveal client:visible>
+      <p class="contact-heading display">{page.data.contactHeading}</p>
+      <a class="mail display" href={`mailto:${settings.email}`}>{settings.email}</a>
+    </Reveal>
+  </section>
 </BaseLayout>
+
+<style>
+  section { max-width: 76rem; margin-inline: auto; }
+
+  .hero {
+    min-height: 78svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem 0 4rem;
+  }
+
+  .work { padding: 7rem 0; }
+  .about { padding: 5rem 0 7rem; border-top: 1px solid var(--color-line); }
+  .contact { padding: 5rem 0 9rem; border-top: 1px solid var(--color-line); }
+
+  h2.eyebrow { margin: 0 0 2.5rem; font-weight: 400; }
+
+  .empty { color: var(--color-muted); font-size: 0.9375rem; }
+  .more {
+    display: inline-block;
+    margin-top: 2.5rem;
+    font-size: 0.875rem;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 0.25rem;
+    color: var(--color-muted);
+    transition: color var(--duration-fast) ease;
+  }
+  .more:hover { color: var(--color-ink); }
+
+  .about-top {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 4rem;
+  }
+  .lead {
+    font-size: clamp(1.875rem, 4.5vw, 3.5rem);
+    margin: 0;
+    max-width: 18ch;
+  }
+  .portrait img,
+  .portrait-slot {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  .portrait-slot {
+    background: var(--color-shade);
+    display: grid;
+    place-items: center;
+  }
+
+  .about-cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3rem;
+    max-width: 58rem;
+  }
+  .about-cols p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+
+  .contact-heading {
+    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+    margin: 0 0 2rem;
+    max-width: 20ch;
+  }
+  .mail {
+    display: inline-block;
+    font-size: clamp(1.5rem, 5.5vw, 4.5rem);
+    line-height: 1;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size var(--duration-slow) var(--ease-out-soft);
+  }
+  .mail:hover { background-size: 100% 1px; }
+
+  @media (max-width: 800px) {
+    .about-top,
+    .about-cols { grid-template-columns: 1fr; gap: 2.5rem; }
+    .work { padding: 4.5rem 0; }
+  }
+</style>
+
+<style is:global>
+  /* BlurText renderer sin egen h1, saa reglen kan ikke vaere scoped. */
+  .hero-title {
+    margin: 0;
+    font-size: clamp(2.75rem, 11vw, 9.5rem);
+    line-height: 0.9;
+  }
+  .hero-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 3rem;
+    margin-top: 4rem;
+  }
+  .hero-meta p {
+    margin: 0;
+    max-width: 46ch;
+    color: var(--color-muted);
+    font-size: 0.9375rem;
+  }
+  @media (max-width: 800px) {
+    .hero-meta { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+  }
+</style>

@@ -3,19 +3,26 @@ import settings from '../data/settings.json';
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-[--color-line]">
-  <div
-    class="mx-auto flex w-full max-w-3xl flex-col gap-4 px-6 py-10 text-sm text-[--color-muted] sm:flex-row sm:items-center sm:justify-between"
-  >
-    <p>{year} {settings.footerText}</p>
-    <div class="flex gap-6">
-      {
-        settings.social.map((item) => (
-          <a href={item.url} class="hover:text-[--color-ink]" rel="me noopener">
-            {item.label}
-          </a>
-        ))
-      }
-    </div>
-  </div>
+<footer>
+  <span>{year} {settings.footerText}</span>
+  <span class="links">
+    {settings.social.map((item) => <a href={item.url} rel="me noopener">{item.label}</a>)}
+  </span>
 </footer>
+
+<style>
+  footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 1.75rem var(--gutter, 2rem);
+    border-top: 1px solid var(--color-line);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .links { display: flex; gap: 1.5rem; }
+  .links a { transition: color var(--duration-fast) ease; }
+  .links a:hover { color: var(--color-ink); }
+</style>

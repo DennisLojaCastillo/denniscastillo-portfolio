@@ -1,17 +1,21 @@
 ---
 title: Forside
-description: Portfolio for Dennis Castillo, web design og udvikling.
-heroTitle: Jeg designer og bygger websites der holder TESTER
-heroText: Freelance web design og udvikling fra Sjælland. Fra første skitse til
-  kode i drift.
-heroCtaLabel: Se cases
-heroCtaUrl: /cases
-services:
-  - title: Design
-    text: Interfaces der er rolige at se på og enkle at bruge.
-  - title: Udvikling
-    text: Kodede sites uden pagebuilder, hurtige og nemme at vedligeholde.
-  - title: Drift
-    text: Automatisk deploy, så en rettelse er live et minut senere.
+description: Portfolio for Dennis Castillo. Web design og udvikling fra Sjælland.
+heroTitle: Design og kode der holder.
+heroText: Freelance web designer og udvikler fra Sjælland. Jeg arbejder hele vejen, fra første skitse til den drift der kommer bagefter. Det giver færre overleveringer og et resultat der faktisk kan vedligeholdes.
+availability: ""
+marquee:
+  - Webdesign
+  - Frontend
+  - Astro
+  - Designsystemer
+  - Drift
+  - Tilgængelighed
+portrait: ""
+portraitAlt: Dennis Castillo
+aboutLead: Jeg arbejder alene, hele vejen fra skitse til drift. Færre led mellem beslutning og kode.
+aboutText:
+  - Skriv et afsnit om din baggrund her. Hvor længe du har arbejdet med websites, og hvilke slags kunder du arbejder for.
+  - Skriv et afsnit om hvordan du arbejder teknisk. Hvad kunden får ud af det, ikke hvilke værktøjer du bruger.
+contactHeading: Har du noget der skal bygges?
 ---
-Skriv en kort introduktion her. Teksten kan redigeres i Pages CMS.

@@ -1,25 +1,76 @@
 ---
 import settings from '../data/settings.json';
+import { Badge } from './Motion';
+
+interface Props {
+  availability?: string;
+}
+
+const { availability } = Astro.props;
 const path = Astro.url.pathname;
 ---
 
-<header class="border-b border-[--color-line]">
-  <div class="mx-auto flex w-full max-w-3xl items-center justify-between px-6 py-6">
-    <a href="/" class="text-sm font-medium tracking-tight">{settings.siteName}</a>
-    <nav class="flex gap-6 text-sm">
-      {
-        settings.nav.map((item) => (
-          <a
-            href={item.url}
-            class:list={[
-              'transition-colors hover:text-[--color-ink]',
-              path.startsWith(item.url) ? 'text-[--color-ink]' : 'text-[--color-muted]',
-            ]}
-          >
-            {item.label}
-          </a>
-        ))
-      }
-    </nav>
-  </div>
+<header>
+  <a class="wordmark" href="/">{settings.siteName}</a>
+
+  {availability && <Badge client:idle text={availability} className="availability" />}
+
+  <nav aria-label="Primær">
+    {
+      settings.nav.map((item) => (
+        <a href={item.url} aria-current={path.startsWith(item.url) ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
 </header>
+
+<style>
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2.5rem var(--gutter, 2rem) 1rem;
+    background: linear-gradient(var(--color-paper) 65%, transparent);
+  }
+  .wordmark {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  nav {
+    display: flex;
+    gap: 1.75rem;
+    font-size: 0.875rem;
+    margin-left: auto;
+  }
+  nav a {
+    color: var(--color-muted);
+    transition: color var(--duration-fast) ease;
+  }
+  nav a:hover,
+  nav a[aria-current='page'] {
+    color: var(--color-ink);
+  }
+  @media (max-width: 640px) {
+    header { gap: 1rem; padding-top: 1.75rem; }
+    nav { gap: 1.125rem; font-size: 0.8125rem; }
+  }
+</style>
+
+<style is:global>
+  /* ShinyText renderer sit eget span, saa reglen kan ikke vaere scoped. */
+  .availability {
+    display: inline-block;
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 640px) {
+    .availability { display: none; }
+  }
+</style>

@@ -57,20 +57,15 @@ content:
     fields:
       - { name: title, label: Titel, type: string, required: true }
       - { name: description, label: SEO-beskrivelse, type: text }
-      - { name: heroTitle, label: Hero-overskrift, type: string }
+      - { name: heroTitle, label: Hero-overskrift, type: string, description: "Den store serif-overskrift øverst" }
       - { name: heroText, label: Hero-tekst, type: text }
-      - { name: heroCtaLabel, label: Knap-tekst, type: string }
-      - { name: heroCtaUrl, label: Knap-link, type: string }
-      - name: services
-        label: Ydelser
-        type: object
-        list:
-          collapsible:
-            summary: "{fields.title}"
-        fields:
-          - { name: title, label: Titel, type: string }
-          - { name: text, label: Tekst, type: text }
-      - { name: body, label: Indhold, type: rich-text }
+      - { name: availability, label: Ledig-mærke, type: string, description: "Fx 'Ledig fra oktober'. Lad stå tom for at skjule mærket" }
+      - { name: marquee, label: Rullende ord, type: string, list: true, description: "Vises i båndet under heroen" }
+      - { name: portrait, label: Portræt, type: image }
+      - { name: portraitAlt, label: Alt-tekst til portræt, type: string }
+      - { name: aboutLead, label: Om, hovedsætning, type: text }
+      - { name: aboutText, label: Om, afsnit, type: text, list: true }
+      - { name: contactHeading, label: Kontakt-overskrift, type: string }
 
   - name: om
     label: Om

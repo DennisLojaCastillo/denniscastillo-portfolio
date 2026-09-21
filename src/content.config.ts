@@ -35,18 +35,19 @@ const pages = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
+
+    // Felter herunder bruges kun af forsiden. De oevrige sider har titel,
+    // beskrivelse og broedtekst, og lader resten staa tomt.
     heroTitle: z.string().optional(),
     heroText: z.string().optional(),
-    heroCtaLabel: z.string().optional(),
-    heroCtaUrl: z.string().optional(),
-    services: z
-      .array(
-        z.object({
-          title: z.string(),
-          text: z.string().optional(),
-        })
-      )
-      .default([]),
+    /** Tom eller udeladt betyder at maerket i headeren ikke vises. */
+    availability: z.string().optional(),
+    marquee: z.array(z.string()).default([]),
+    portrait: z.string().optional(),
+    portraitAlt: z.string().optional(),
+    aboutLead: z.string().optional(),
+    aboutText: z.array(z.string()).default([]),
+    contactHeading: z.string().optional(),
   }),
 });
 

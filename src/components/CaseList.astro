@@ -1,0 +1,146 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  items: CollectionEntry<'cases'>[];
+}
+const { items } = Astro.props;
+---
+
+<div class="case-list">
+  <ul>
+    {
+      items.map((item, i) => (
+        <li data-row data-cover={item.data.cover ?? ''}>
+          <a href={`/cases/${item.id}`}>
+            <span class="num">{String(i + 1).padStart(2, '0')}</span>
+            <span class="title display">{item.data.title}</span>
+            <span class="meta">{item.data.services.join(' / ')}</span>
+            <span class="year">{item.data.year}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <!-- Billedet der foelger markoeren. Skjult indtil en raekke roeres. -->
+  <div class="peek" data-peek aria-hidden="true"></div>
+</div>
+
+<style>
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-line);
+  }
+  li { border-bottom: 1px solid var(--color-line); }
+  a {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr auto 5rem;
+    gap: 1.5rem;
+    align-items: baseline;
+    padding: 1.75rem 0;
+    transition: transform var(--duration-base) var(--ease-out-soft);
+  }
+  li:hover a { transform: translateX(1.25rem); }
+
+  /* Naar markoeren er over listen, traeder de oevrige titler tilbage. */
+  ul:hover .title { opacity: 0.3; }
+  li:hover .title { opacity: 1; }
+
+  .title {
+    font-size: clamp(1.875rem, 5.5vw, 4rem);
+    line-height: 1;
+    transition: opacity var(--duration-base) ease;
+  }
+  .num,
+  .year,
+  .meta {
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .year { text-align: right; }
+
+  .peek {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    width: 20rem;
+    aspect-ratio: 4 / 3;
+    background-color: var(--color-shade);
+    background-size: cover;
+    background-position: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.92);
+    transition:
+      opacity var(--duration-base) ease,
+      transform var(--duration-base) var(--ease-out-soft);
+  }
+  .peek.on {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  @media (max-width: 800px) {
+    a { grid-template-columns: 2.5rem 1fr 3.5rem; }
+    .meta { display: none; }
+    .peek { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    li:hover a { transform: none; }
+    .peek { display: none; }
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  if (!reduce && fine) {
+    document.querySelectorAll<HTMLElement>('.case-list').forEach((list) => {
+      const peek = list.querySelector<HTMLElement>('[data-peek]');
+      const rows = list.querySelectorAll<HTMLElement>('[data-row]');
+      if (!peek || rows.length === 0) return;
+
+      let x = 0, y = 0, cx = 0, cy = 0;
+      let raf: number | null = null;
+
+      const loop = () => {
+        cx += (x - cx) * 0.12;
+        cy += (y - cy) * 0.12;
+        peek.style.translate = `${cx}px ${cy}px`;
+        raf = requestAnimationFrame(loop);
+      };
+
+      const stop = () => {
+        if (raf !== null) {
+          cancelAnimationFrame(raf);
+          raf = null;
+        }
+      };
+
+      rows.forEach((row) => {
+        row.addEventListener('mouseenter', () => {
+          const cover = row.dataset.cover;
+          peek.style.backgroundImage = cover ? `url("${cover}")` : 'none';
+          peek.classList.add('on');
+          if (raf === null) raf = requestAnimationFrame(loop);
+        });
+        row.addEventListener('mouseleave', () => peek.classList.remove('on'));
+      });
+
+      // Stopper animationsloekken naar musen forlader hele listen.
+      list.addEventListener('mouseleave', stop);
+
+      window.addEventListener('mousemove', (e) => {
+        x = e.clientX;
+        y = e.clientY;
+      });
+    });
+  }
+</script>

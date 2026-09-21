@@ -7,9 +7,11 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title?: string;
   description?: string;
+  /** Vises som maerke i headeren. Tom eller udeladt skjuler det. */
+  availability?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, availability } = Astro.props;
 const pageTitle = title ? `${title} | ${settings.siteName}` : settings.seoTitle;
 const pageDescription = description ?? settings.seoDescription;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -27,13 +29,41 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
+    <meta name="theme-color" content="#f7f7f5" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <!-- Markerer at JavaScript koerer, saa indhold der venter paa en animation
+         kan vises med det samme hvis det ikke goer. -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
   </head>
-  <body class="flex min-h-screen flex-col">
-    <Header />
-    <main class="mx-auto w-full max-w-3xl flex-1 px-6 py-16">
+  <body>
+    <a class="skip" href="#indhold">Spring til indhold</a>
+    <Header availability={availability} />
+    <main id="indhold">
       <slot />
     </main>
     <Footer />
+
+    <style>
+      .skip {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        z-index: 100;
+        background: var(--color-ink);
+        color: var(--color-paper);
+        padding: 0.75rem 1.25rem;
+        font-size: 0.875rem;
+      }
+      .skip:focus {
+        left: 1rem;
+        top: 1rem;
+      }
+      main {
+        padding-inline: var(--gutter, 2rem);
+      }
+      @media (max-width: 640px) {
+        main { --gutter: 1.25rem; }
+      }
+    </style>
   </body>
 </html>

@@ -1,0 +1,44 @@
+---
+interface Props {
+  items: string[];
+}
+const { items } = Astro.props;
+// Listen dubleres, saa animationen kan loope soemloest paa praecis halvdelen.
+const doubled = [...items, ...items];
+---
+
+{
+  items.length > 0 && (
+    <div class="marquee" aria-hidden="true">
+      <div class="track">
+        {doubled.map((item) => <span>{item}</span>)}
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .marquee {
+    overflow: hidden;
+    border-block: 1px solid var(--color-line);
+    padding: 1.25rem 0;
+    margin-inline: calc(var(--gutter, 2rem) * -1);
+  }
+  .track {
+    display: flex;
+    gap: 3rem;
+    width: max-content;
+    padding-left: 3rem;
+    animation: slide 36s linear infinite;
+    font-size: 0.8125rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  @keyframes slide {
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .track { animation: none; }
+  }
+</style>
