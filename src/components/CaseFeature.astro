@@ -1,0 +1,86 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  item: CollectionEntry<'cases'>;
+}
+const { item } = Astro.props;
+const { title, client, year, services, excerpt, cover } = item.data;
+---
+
+<article>
+  <a href={`/cases/${item.id}`}>
+    <div class="cover">
+      {
+        cover ? (
+          <img src={cover} alt="" width="1280" height="800" loading="lazy" decoding="async" />
+        ) : (
+          <div class="cover-slot"><span class="eyebrow">Cover mangler</span></div>
+        )
+      }
+    </div>
+
+    <div class="meta">
+      <h3 class="title display">{title}</h3>
+      {excerpt && <p class="excerpt">{excerpt}</p>}
+      <p class="facts eyebrow">
+        {[client, year, services.join(' / ')].filter(Boolean).join('  ·  ')}
+      </p>
+    </div>
+  </a>
+</article>
+
+<style>
+  article + article { margin-top: 5rem; }
+
+  .cover {
+    overflow: hidden;
+    background: var(--color-shade);
+  }
+  .cover img,
+  .cover-slot {
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    transition: scale var(--duration-slow) var(--ease-out-soft);
+  }
+  .cover-slot {
+    display: grid;
+    place-items: center;
+  }
+  a:hover .cover img { scale: 1.02; }
+
+  .meta {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.75rem 3rem;
+    align-items: baseline;
+    margin-top: 1.5rem;
+  }
+  .title {
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    margin: 0;
+  }
+  .excerpt {
+    grid-column: 1 / -1;
+    margin: 0;
+    max-width: 52ch;
+    color: var(--color-muted);
+    font-size: 0.9375rem;
+  }
+  .facts {
+    grid-row: 1;
+    grid-column: 2;
+    margin: 0;
+    text-align: right;
+  }
+
+  @media (max-width: 700px) {
+    article + article { margin-top: 3.5rem; }
+    .meta { grid-template-columns: 1fr; }
+    .facts { grid-row: auto; grid-column: 1; text-align: left; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    a:hover .cover img { scale: 1; }
+  }
+</style>

@@ -42,9 +42,12 @@ const pages = defineCollection({
     heroText: z.string().optional(),
     /** Tom eller udeladt betyder at maerket i headeren ikke vises. */
     availability: z.string().optional(),
-    marquee: z.array(z.string()).default([]),
     portrait: z.string().optional(),
     portraitAlt: z.string().optional(),
+    /** Tre korte linjer om hvad du loeser for kunden. */
+    services: z
+      .array(z.object({ title: z.string(), text: z.string().optional() }))
+      .default([]),
     aboutLead: z.string().optional(),
     aboutText: z.array(z.string()).default([]),
     contactHeading: z.string().optional(),

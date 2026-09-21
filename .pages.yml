@@ -60,9 +60,19 @@ content:
       - { name: heroTitle, label: Hero-overskrift, type: string, description: "Den store serif-overskrift øverst" }
       - { name: heroText, label: Hero-tekst, type: text }
       - { name: availability, label: Ledig-mærke, type: string, description: "Fx 'Ledig fra oktober'. Lad stå tom for at skjule mærket" }
-      - { name: marquee, label: Rullende ord, type: string, list: true, description: "Vises i båndet under heroen" }
       - { name: portrait, label: Portræt, type: image }
       - { name: portraitAlt, label: Alt-tekst til portræt, type: string }
+      - name: services
+        label: Hvad jeg laver
+        type: object
+        list:
+          min: 2
+          max: 4
+          collapsible:
+            summary: "{fields.title}"
+        fields:
+          - { name: title, label: Titel, type: string }
+          - { name: text, label: Tekst, type: text }
       - { name: aboutLead, label: Om, hovedsætning, type: text }
       - { name: aboutText, label: Om, afsnit, type: text, list: true }
       - { name: contactHeading, label: Kontakt-overskrift, type: string }

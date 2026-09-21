@@ -2,10 +2,11 @@
 import { getEntry, getCollection } from 'astro:content';
 import settings from '../data/settings.json';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Marquee from '../components/Marquee.astro';
-import CaseList from '../components/CaseList.astro';
 import BlurHeading from '../components/BlurHeading.astro';
 import Reveal from '../components/Reveal.astro';
+import CaseFeature from '../components/CaseFeature.astro';
+import CaseList from '../components/CaseList.astro';
+import Services from '../components/Services.astro';
 
 const page = await getEntry('pages', 'forside');
 if (!page) throw new Error('src/content/pages/forside.md mangler');
@@ -13,7 +14,11 @@ if (!page) throw new Error('src/content/pages/forside.md mangler');
 const cases = (await getCollection('cases', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order
 );
-const featured = cases.slice(0, 5);
+
+// De to foerste vises stort med cover. Resten som typografisk liste,
+// saa forsiden ikke bliver uendelig lang.
+const featured = cases.slice(0, 2);
+const rest = cases.slice(2, 6);
 ---
 
 <BaseLayout
@@ -28,48 +33,68 @@ const featured = cases.slice(0, 5);
       stagger={110}
       class="hero-title display"
     />
+
     <Reveal delay={700} class="hero-meta">
-      <p>{page.data.heroText}</p>
-      <span class="eyebrow">Scroll</span>
+      <div class="hero-text">
+        <p>{page.data.heroText}</p>
+      </div>
+      <figure class="portrait">
+        {
+          page.data.portrait ? (
+            <img
+              src={page.data.portrait}
+              alt={page.data.portraitAlt ?? ''}
+              width="560"
+              height="700"
+              loading="eager"
+              decoding="async"
+            />
+          ) : (
+            <div class="portrait-slot"><span class="eyebrow">Portræt</span></div>
+          )
+        }
+      </figure>
     </Reveal>
   </section>
 
-  <Marquee items={page.data.marquee} />
-
   <section id="arbejde" class="work">
     <h2 class="eyebrow">Udvalgt arbejde</h2>
+
     {
-      featured.length > 0 ? (
-        <Reveal>
-          <CaseList items={featured} />
-        </Reveal>
-      ) : (
+      cases.length === 0 && (
         <p class="empty">Ingen cases endnu. Opret den første i Pages CMS.</p>
       )
     }
+
+    {featured.map((item) => <Reveal><CaseFeature item={item} /></Reveal>)}
+
     {
-      cases.length > featured.length && (
+      rest.length > 0 && (
+        <Reveal class="rest">
+          <CaseList items={rest} />
+        </Reveal>
+      )
+    }
+
+    {
+      cases.length > featured.length + rest.length && (
         <a class="more" href="/cases">Se alle {cases.length} cases</a>
       )
     }
   </section>
 
+  <section id="ydelser" class="services-section">
+    <h2 class="eyebrow">Hvad jeg laver</h2>
+    <Reveal>
+      <Services items={page.data.services} />
+    </Reveal>
+  </section>
+
   <section id="om" class="about">
     <h2 class="eyebrow">Om</h2>
-    <div class="about-top">
-      <Reveal>
-        <p class="lead display">{page.data.aboutLead}</p>
-      </Reveal>
-      <div class="portrait">
-        {
-          page.data.portrait ? (
-            <img src={page.data.portrait} alt={page.data.portraitAlt ?? ''} width="720" height="900" loading="lazy" decoding="async" />
-          ) : (
-            <div class="portrait-slot" aria-hidden="true"><span class="eyebrow">Portræt</span></div>
-          )
-        }
-      </div>
-    </div>
+    <Reveal>
+      <p class="lead display">{page.data.aboutLead}</p>
+    </Reveal>
     {
       page.data.aboutText.length > 0 && (
         <Reveal delay={120}>
@@ -91,18 +116,22 @@ const featured = cases.slice(0, 5);
 </BaseLayout>
 
 <style>
-  section { max-width: 76rem; margin-inline: auto; }
+  section {
+    max-width: 76rem;
+    margin-inline: auto;
+  }
 
   .hero {
-    min-height: 78svh;
+    min-height: 82svh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 2rem 0 4rem;
+    padding: 2rem 0 5rem;
   }
 
-  .work { padding: 7rem 0; }
-  .about { padding: 5rem 0 7rem; border-top: 1px solid var(--color-line); }
+  .work { padding: 6rem 0; }
+  .services-section { padding: 5rem 0 6rem; border-top: 1px solid var(--color-line); }
+  .about { padding: 5rem 0 6rem; border-top: 1px solid var(--color-line); }
   .contact { padding: 5rem 0 9rem; border-top: 1px solid var(--color-line); }
 
   h2.eyebrow { margin: 0 0 2.5rem; font-weight: 400; }
@@ -110,7 +139,7 @@ const featured = cases.slice(0, 5);
   .empty { color: var(--color-muted); font-size: 0.9375rem; }
   .more {
     display: inline-block;
-    margin-top: 2.5rem;
+    margin-top: 3rem;
     font-size: 0.875rem;
     border-bottom: 1px solid currentColor;
     padding-bottom: 0.25rem;
@@ -119,30 +148,11 @@ const featured = cases.slice(0, 5);
   }
   .more:hover { color: var(--color-ink); }
 
-  .about-top {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 4rem;
-    align-items: end;
-    margin-bottom: 4rem;
-  }
   .lead {
     font-size: clamp(1.875rem, 4.5vw, 3.5rem);
-    margin: 0;
+    margin: 0 0 4rem;
     max-width: 18ch;
   }
-  .portrait img,
-  .portrait-slot {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-  }
-  .portrait-slot {
-    background: var(--color-shade);
-    display: grid;
-    place-items: center;
-  }
-
   .about-cols {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -174,33 +184,56 @@ const featured = cases.slice(0, 5);
   .mail:hover { background-size: 100% 1px; }
 
   @media (max-width: 800px) {
-    .about-top,
-    .about-cols { grid-template-columns: 1fr; gap: 2.5rem; }
-    .work { padding: 4.5rem 0; }
+    .about-cols { grid-template-columns: 1fr; gap: 2rem; }
+    .work { padding: 4rem 0; }
   }
 </style>
 
 <style is:global>
-  /* BlurText renderer sin egen h1, saa reglen kan ikke vaere scoped. */
+  /* Reglerne herunder rammer elementer fra BlurHeading og Reveal, som
+     Astros scoped styles ikke naar ind i. */
   .hero-title {
     margin: 0;
     font-size: clamp(2.75rem, 11vw, 9.5rem);
     line-height: 0.9;
   }
   .hero-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+    display: grid;
+    grid-template-columns: 1fr auto;
     gap: 3rem;
-    margin-top: 4rem;
+    align-items: end;
+    margin-top: 3.5rem;
   }
-  .hero-meta p {
+  .hero-meta .hero-text p {
     margin: 0;
     max-width: 46ch;
     color: var(--color-muted);
     font-size: 0.9375rem;
   }
-  @media (max-width: 800px) {
-    .hero-meta { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+  .hero-meta .portrait {
+    margin: 0;
+    width: clamp(8rem, 18vw, 14rem);
+  }
+  .hero-meta .portrait img,
+  .hero-meta .portrait-slot {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  .hero-meta .portrait-slot {
+    background: var(--color-shade);
+    display: grid;
+    place-items: center;
+  }
+  .rest { margin-top: 5rem; }
+
+  @media (max-width: 700px) {
+    .hero-meta {
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .hero-meta .portrait { order: -1; width: 5.5rem; }
+    .rest { margin-top: 3.5rem; }
   }
 </style>
