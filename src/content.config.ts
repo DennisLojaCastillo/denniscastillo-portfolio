@@ -90,6 +90,15 @@ const pages = defineCollection({
     aboutLead: z.string().optional(),
     aboutText: z.array(z.string()).default([]),
     quote: z.string().optional(),
+    /** Spørgsmål og svar, grupperet i kategorier. Bruges af FAQ-siden. */
+    faq: z
+      .array(
+        z.object({
+          category: z.string(),
+          items: z.array(z.object({ question: z.string(), answer: z.string() })).default([]),
+        })
+      )
+      .default([]),
     contactHeading: z.string().optional(),
     contactText: z.string().optional(),
   }),

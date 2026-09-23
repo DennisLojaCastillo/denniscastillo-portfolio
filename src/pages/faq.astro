@@ -1,0 +1,140 @@
+---
+import { getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Reveal from '../components/Reveal.astro';
+
+const page = await getEntry('pages', 'faq');
+if (!page) throw new Error('src/content/pages/faq.md mangler');
+const d = page.data;
+
+// Strukturerede data, så Google kan vise spørgsmålene direkte i søgningen.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: d.faq.flatMap((c) =>
+    c.items.map((i) => ({
+      '@type': 'Question',
+      name: i.question,
+      acceptedAnswer: { '@type': 'Answer', text: i.answer },
+    }))
+  ),
+};
+---
+
+<BaseLayout title={d.title} description={d.description} ctaLabel={d.ctaLabel}>
+  <PageHero title={d.heroTitle ?? d.title} eyebrow={d.eyebrow} lead={d.introText} />
+
+  <section class="band">
+    <div class="faq">
+      {
+        d.faq.map((c, i) => (
+          <Reveal class="group" delay={i * 60}>
+            <h2 class="category eyebrow">{c.category}</h2>
+            <div class="items">
+              {c.items.map((item) => (
+                <details>
+                  <summary>
+                    <span>{item.question}</span>
+                    <span class="icon" aria-hidden="true" />
+                  </summary>
+                  <p>{item.answer}</p>
+                </details>
+              ))}
+            </div>
+          </Reveal>
+        ))
+      }
+    </div>
+  </section>
+
+  {
+    d.contactHeading && (
+      <section class="band">
+        <Reveal>
+          <h2 class="contact-heading display">{d.contactHeading}</h2>
+          {d.contactText && <p class="band-lead">{d.contactText}</p>}
+          {d.ctaLabel && <a class="button cta" href="/kontakt/">{d.ctaLabel}</a>}
+        </Reveal>
+      </section>
+    )
+  }
+
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+</BaseLayout>
+
+<style>
+  .faq {
+    display: grid;
+    gap: var(--space-16);
+  }
+  .category { margin: 0 0 var(--space-4); }
+
+  details {
+    border-top: 1px solid var(--color-line);
+    /* Gør det muligt at animere til højden auto. */
+    interpolate-size: allow-keywords;
+  }
+  details:last-child { border-bottom: 1px solid var(--color-line); }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-6);
+    padding: var(--space-6) 0;
+    cursor: pointer;
+    list-style: none;
+    font-size: var(--text-lg);
+    letter-spacing: -0.015em;
+  }
+  summary::-webkit-details-marker { display: none; }
+
+  /* Plus der bliver til minus. To streger, den lodrette drejes væk. */
+  .icon {
+    position: relative;
+    flex: none;
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  .icon::before,
+  .icon::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto;
+    height: 1px;
+    background: currentColor;
+    transition: rotate var(--duration-base) var(--ease-out-soft);
+  }
+  .icon::after { rotate: 90deg; }
+  details[open] .icon::after { rotate: 0deg; }
+
+  details p {
+    margin: 0;
+    padding: 0 0 var(--space-6);
+    max-width: 60ch;
+    color: var(--color-muted);
+    line-height: 1.7;
+  }
+
+  /* Svaret glider blødt ind, hvor browseren understøtter det. */
+  details::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size var(--duration-base) var(--ease-out-soft),
+      content-visibility var(--duration-base) allow-discrete;
+  }
+  details[open]::details-content { block-size: auto; }
+
+  .contact-heading {
+    margin: 0;
+    font-size: var(--text-3xl);
+  }
+  .cta { margin-top: var(--space-8); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .icon::before,
+    .icon::after,
+    details::details-content { transition: none; }
+  }
+</style>

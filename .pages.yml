@@ -166,6 +166,38 @@ content:
       - { name: aboutText, label: Om, afsnit, type: text, list: true }
       - { name: contactHeading, label: Kontakt-overskrift, type: string }
 
+  - name: faq
+    label: FAQ
+    type: file
+    path: src/content/pages/faq.md
+    format: yaml-frontmatter
+    fields:
+      - { name: title, label: Titel, type: string, required: true }
+      - { name: description, label: SEO-beskrivelse, type: text }
+      - { name: eyebrow, label: Lille linje over overskriften, type: string }
+      - { name: heroTitle, label: Overskrift, type: string }
+      - { name: introText, label: Tekst under overskriften, type: text }
+      - name: faq
+        label: Spørgsmål
+        type: object
+        list:
+          collapsible:
+            summary: "{fields.category}"
+        fields:
+          - { name: category, label: Kategori, type: string }
+          - name: items
+            label: Spørgsmål og svar
+            type: object
+            list:
+              collapsible:
+                summary: "{fields.question}"
+            fields:
+              - { name: question, label: Spørgsmål, type: string }
+              - { name: answer, label: Svar, type: text }
+      - { name: contactHeading, label: Kontakt, overskrift, type: string }
+      - { name: contactText, label: Kontakt, tekst, type: text }
+      - { name: ctaLabel, label: Knaptekst, type: string }
+
   - name: om
     label: Om
     type: file
