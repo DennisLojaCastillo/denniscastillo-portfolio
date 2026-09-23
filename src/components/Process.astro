@@ -5,15 +5,22 @@
  */
 interface Props {
   heading?: string;
+  /** Kort tekst under overskriften. */
+  text?: string;
   steps: { title: string; text?: string }[];
 }
-const { heading, steps } = Astro.props;
+const { heading, text, steps } = Astro.props;
 ---
 
 {
   steps.length > 0 && (
     <div class="process">
-      {heading && <h2 class="heading display">{heading}</h2>}
+      {(heading || text) && (
+        <div class="head">
+          {heading && <h2 class="heading display">{heading}</h2>}
+          {text && <p class="text">{text}</p>}
+        </div>
+      )}
       <ol class="steps">
         {steps.map((step, i) => (
           <li>
@@ -34,9 +41,17 @@ const { heading, steps } = Astro.props;
     gap: var(--space-16);
     align-items: start;
   }
-  .heading {
+  .head {
     position: sticky;
     top: var(--space-24);
+  }
+  .text {
+    margin: var(--space-6) 0 0;
+    max-width: 36ch;
+    color: var(--color-muted);
+    line-height: 1.65;
+  }
+  .heading {
     margin: 0;
     font-size: var(--text-4xl);
     max-width: 12ch;
@@ -86,7 +101,8 @@ const { heading, steps } = Astro.props;
 
   @media (max-width: 800px) {
     .process { grid-template-columns: 1fr; gap: var(--space-12); }
-    .heading { position: static; font-size: var(--text-3xl); }
+    .head { position: static; }
+    .heading { font-size: var(--text-3xl); }
     .steps { gap: var(--space-12); }
   }
   @media (prefers-reduced-motion: reduce) {

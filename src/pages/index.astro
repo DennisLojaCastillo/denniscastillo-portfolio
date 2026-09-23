@@ -167,11 +167,6 @@ const featured = cases.slice(0, 4);
 </BaseLayout>
 
 <style>
-  section {
-    max-width: var(--measure);
-    margin-inline: auto;
-  }
-
   /* Hero ------------------------------------------------------------- */
   .hero {
     min-height: 84svh;
@@ -214,14 +209,6 @@ const featured = cases.slice(0, 4);
   .hero-cta:hover span { translate: 0 0.2rem; }
 
   /* Bånd ------------------------------------------------------------- */
-  .band { padding: var(--space-24) 0; border-top: 1px solid var(--color-line); }
-  .band-lead {
-    margin: var(--space-4) 0 0;
-    max-width: 54ch;
-    color: var(--color-muted);
-    font-size: var(--text-md);
-    line-height: 1.65;
-  }
   .work { padding-bottom: var(--space-32); }
 
   .empty { color: var(--color-muted); }
@@ -328,7 +315,6 @@ const featured = cases.slice(0, 4);
   @media (max-width: 800px) {
     .about-grid { grid-template-columns: 1fr; gap: var(--space-12); }
     .about-side { max-width: 20rem; }
-    .band { padding: var(--space-16) 0; }
     .quote { margin-top: var(--space-16); }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -352,7 +338,6 @@ const featured = cases.slice(0, 4);
     gap: var(--space-8);
     margin-top: var(--space-16);
   }
-  .band-head { margin-bottom: var(--space-16); }
   /* Margin sidder på Reveal-wrapperen, da hver case er pakket ind i én. */
   .case-item + .case-item { margin-top: var(--space-32); }
   /* Uden cover er en case kun tekst, og den store afstand virker tom. */
@@ -361,8 +346,5 @@ const featured = cases.slice(0, 4);
   @media (max-width: 700px) {
     .case-item + .case-item { margin-top: var(--space-24); }
     .case-item:not(:has(.cover)) + .case-item:not(:has(.cover)) { margin-top: var(--space-12); }
-  }
-  @media (max-width: 800px) {
-    .band-head { margin-bottom: var(--space-12); }
   }
 </style>

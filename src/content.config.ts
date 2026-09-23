@@ -19,6 +19,27 @@ const cases = defineCollection({
   }),
 });
 
+const services = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/services' }),
+  schema: z.object({
+    title: z.string(),
+    order: z.number().default(0),
+    /** Kort tekst til oversigten. */
+    excerpt: z.string().optional(),
+    introHeading: z.string().optional(),
+    intro: z.array(z.string()).default([]),
+    /** "Hvad jeg tilbyder": grupper af ydelser, hver med en liste. */
+    offerings: z
+      .array(z.object({ title: z.string(), items: z.array(z.string()).default([]) }))
+      .default([]),
+    /** "Hvad får du med i løsningen?" */
+    included: z.array(z.string()).default([]),
+    features: z.array(z.string()).default([]),
+    process: z.array(z.object({ title: z.string(), text: z.string().optional() })).default([]),
+    draft: z.boolean().default(false),
+  }),
+});
+
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
   schema: z.object({
@@ -54,7 +75,10 @@ const pages = defineCollection({
       .array(z.object({ title: z.string(), text: z.string().optional() }))
       .default([]),
     workLead: z.string().optional(),
+    introHeading: z.string().optional(),
+    introText: z.string().optional(),
     processHeading: z.string().optional(),
+    processText: z.string().optional(),
     /** Trinene i et samarbejde, i rækkefølge. */
     process: z
       .array(z.object({ title: z.string(), text: z.string().optional() }))
@@ -71,4 +95,4 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { cases, blog, pages };
+export const collections = { cases, services, blog, pages };

@@ -1,0 +1,216 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Reveal from '../../components/Reveal.astro';
+import Process from '../../components/Process.astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const services = (await getCollection('services', ({ data }) => !data.draft)).sort(
+    (a, b) => a.data.order - b.data.order
+  );
+  return services.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry, others: services.filter((s) => s.id !== entry.id) },
+  }));
+};
+
+const { entry, others } = Astro.props;
+const d = entry.data;
+// Kontaktboksen er ens på alle undersider og redigeres på Services-siden.
+const hub = await getEntry('pages', 'services');
+---
+
+<BaseLayout title={d.title} description={d.excerpt} ctaLabel={hub?.data.ctaLabel}>
+  <PageHero title={d.title} eyebrow="Services" lead={d.excerpt} />
+
+  <section class="band">
+    <div class="split">
+      <Reveal class="split-main">
+        {d.introHeading && <h2 class="section-title display">{d.introHeading}</h2>}
+        {d.intro.map((p) => <p class="body">{p}</p>)}
+      </Reveal>
+      {
+        hub?.data.contactHeading && (
+          <Reveal delay={120} class="split-side">
+            <aside class="talk">
+              <h2 class="talk-title">{hub.data.contactHeading}</h2>
+              {hub.data.contactText && <p>{hub.data.contactText}</p>}
+              {hub.data.ctaLabel && <a class="button" href="/kontakt/">{hub.data.ctaLabel}</a>}
+            </aside>
+          </Reveal>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    d.offerings.length > 0 && (
+      <section class="band">
+        <Reveal class="band-head">
+          <h2 class="eyebrow">Hvad jeg tilbyder</h2>
+        </Reveal>
+        <div class="offerings">
+          {d.offerings.map((o, i) => (
+            <Reveal delay={i * 100}>
+              <h3 class="group-title display">{o.title}</h3>
+              <ul class="items">
+                {o.items.map((it) => <li>{it}</li>)}
+              </ul>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    (d.included.length > 0 || d.features.length > 0) && (
+      <section class="band">
+        <Reveal class="band-head">
+          <h2 class="eyebrow">Hvad får du med i løsningen?</h2>
+        </Reveal>
+        <div class="split">
+          <Reveal class="split-main">
+            {d.included.map((p) => <p class="body">{p}</p>)}
+          </Reveal>
+          {d.features.length > 0 && (
+            <Reveal delay={120} class="split-side">
+              <ul class="features">
+                {d.features.map((f) => <li>{f}</li>)}
+              </ul>
+            </Reveal>
+          )}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    d.process.length > 0 && (
+      <section class="band">
+        <Process heading="Udviklingsprocessen" steps={d.process} />
+      </section>
+    )
+  }
+
+  {
+    others.length > 0 && (
+      <section class="band">
+        <Reveal class="band-head">
+          <h2 class="eyebrow">Flere digitale løsninger</h2>
+        </Reveal>
+        <ul class="others">
+          {others.map((o) => (
+            <li>
+              <a href={`/services/${o.id}/`}>
+                <span class="display">{o.data.title}</span>
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .split {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--space-16);
+    align-items: start;
+  }
+  .section-title {
+    margin: 0 0 var(--space-8);
+    font-size: var(--text-3xl);
+    max-width: 18ch;
+  }
+  .body {
+    margin: 0 0 var(--space-4);
+    max-width: 60ch;
+    color: var(--color-muted);
+    line-height: 1.7;
+  }
+
+  .talk {
+    padding: var(--space-8);
+    background: var(--color-shade);
+    border-radius: var(--space-3);
+  }
+  .talk-title {
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    letter-spacing: -0.018em;
+  }
+  .talk p {
+    margin: 0 0 var(--space-6);
+    color: var(--color-muted);
+    line-height: 1.65;
+  }
+
+  .offerings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: var(--space-12) var(--space-16);
+  }
+  .group-title {
+    margin: 0 0 var(--space-6);
+    font-size: var(--text-2xl);
+  }
+  .items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .items li {
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--color-line);
+    color: var(--color-muted);
+  }
+
+  .features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .features li {
+    font-size: var(--text-sm);
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: var(--space-2) var(--space-4);
+  }
+
+  .others {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .others a {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: var(--space-6) 0;
+    border-top: 1px solid var(--color-line);
+    font-size: var(--text-2xl);
+  }
+  .others a span:last-child {
+    font-size: var(--text-lg);
+    color: var(--color-muted);
+    transition: translate var(--duration-base) var(--ease-out-soft), color var(--duration-fast) ease;
+  }
+  .others a:hover span:last-child { translate: 0.3rem 0; color: var(--color-ink); }
+
+  @media (max-width: 800px) {
+    .split { grid-template-columns: 1fr; gap: var(--space-12); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .others a:hover span:last-child { translate: none; }
+  }
+</style>

@@ -1,0 +1,55 @@
+---
+/**
+ * Toppen af en underside: lille linje, stor overskrift og en kort tekst.
+ * Samme udtryk som forsidens hero, bare lavere.
+ */
+import MaskHeading from './MaskHeading.astro';
+import Reveal from './Reveal.astro';
+
+interface Props {
+  title: string;
+  eyebrow?: string;
+  lead?: string;
+}
+const { title, eyebrow, lead } = Astro.props;
+---
+
+<section class="page-hero">
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <MaskHeading as="h1" text={title} class="page-title display" />
+  {
+    lead && (
+      <Reveal delay={500}>
+        <p class="lead">{lead}</p>
+      </Reveal>
+    )
+  }
+  <slot />
+</section>
+
+<style>
+  .page-hero {
+    padding: var(--space-24) 0 var(--space-16);
+  }
+  .eyebrow { margin: 0 0 var(--space-6); }
+  .lead {
+    margin: var(--space-8) 0 0;
+    max-width: 52ch;
+    color: var(--color-muted);
+    font-size: var(--text-lg);
+    line-height: 1.6;
+  }
+  @media (max-width: 800px) {
+    .page-hero { padding: var(--space-16) 0 var(--space-12); }
+  }
+</style>
+
+<style is:global>
+  /* MaskHeading ligger uden for denne komponents scope. */
+  .page-title {
+    margin: 0;
+    font-size: clamp(2.75rem, 7vw, 6rem);
+    line-height: 0.95;
+    max-width: 16ch;
+  }
+</style>

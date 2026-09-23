@@ -1,0 +1,63 @@
+---
+import { getEntry, getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Reveal from '../../components/Reveal.astro';
+import Services from '../../components/Services.astro';
+import Process from '../../components/Process.astro';
+
+const page = await getEntry('pages', 'services');
+if (!page) throw new Error('src/content/pages/services.md mangler');
+
+const services = (await getCollection('services', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((s) => ({ title: s.data.title, text: s.data.excerpt, href: `/services/${s.id}/` }));
+---
+
+<BaseLayout title={page.data.title} description={page.data.description} ctaLabel={page.data.ctaLabel}>
+  <PageHero title={page.data.heroTitle ?? page.data.title} eyebrow={page.data.eyebrow} />
+
+  <section class="list">
+    <Reveal>
+      <Services items={services} />
+    </Reveal>
+  </section>
+
+  {
+    page.data.introHeading && (
+      <section class="band">
+        <Reveal class="intro">
+          <h2 class="intro-heading display">{page.data.introHeading}</h2>
+          {page.data.introText && <p class="band-lead">{page.data.introText}</p>}
+        </Reveal>
+      </section>
+    )
+  }
+
+  {
+    page.data.process.length > 0 && (
+      <section class="band">
+        <Process heading={page.data.processHeading} text={page.data.processText} steps={page.data.process} />
+        {page.data.ctaLabel && (
+          <Reveal>
+            <a class="button cta" href="/kontakt/">{page.data.ctaLabel}</a>
+          </Reveal>
+        )}
+      </section>
+    )
+  }
+</BaseLayout>
+
+<style>
+  .cta { margin-top: var(--space-16); }
+  /* Listen har sin egen linje øverst, så båndets linje udelades. */
+  .list { padding-bottom: var(--space-24); }
+</style>
+
+<style is:global>
+  .intro-heading {
+    margin: 0;
+    font-size: var(--text-4xl);
+    max-width: 18ch;
+  }
+</style>

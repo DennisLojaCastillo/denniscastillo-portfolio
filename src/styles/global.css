@@ -106,6 +106,8 @@ img { display: block; max-width: 100%; height: auto; }
   font-weight: 400;
   line-height: 0.95;
   letter-spacing: -0.02em;
+  /* Jævne linjer, så et enkelt ord ikke står alene til sidst. */
+  text-wrap: balance;
 }
 
 .eyebrow {
@@ -114,6 +116,26 @@ img { display: block; max-width: 100%; height: auto; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-muted);
+}
+
+/* ---- Sektioner -------------------------------------------------------
+   Fælles for alle sider: målebredde, bånd med linje over og sektionshoved. */
+main > section {
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+.band { padding: var(--space-24) 0; border-top: 1px solid var(--color-line); }
+.band-head { margin-bottom: var(--space-16); }
+.band-lead {
+  margin: var(--space-4) 0 0;
+  max-width: 54ch;
+  color: var(--color-muted);
+  font-size: var(--text-md);
+  line-height: 1.65;
+}
+@media (max-width: 800px) {
+  .band { padding: var(--space-16) 0; }
+  .band-head { margin-bottom: var(--space-12); }
 }
 
 /* Primær knap. Samme form som CTA'en i headeren, bare større. */

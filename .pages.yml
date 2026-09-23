@@ -28,6 +28,73 @@ content:
       - { name: draft, label: Kladde, type: boolean }
       - { name: body, label: Indhold, type: rich-text }
 
+  - name: services
+    label: Services
+    type: collection
+    path: src/content/services
+    filename: "{fields.title}.md"
+    format: yaml-frontmatter
+    subfolders: false
+    view:
+      fields: [title, order]
+      primary: title
+      sort: [order, title]
+      order: asc
+    fields:
+      - { name: title, label: Titel, type: string, required: true }
+      - { name: order, label: Rækkefølge, type: number, description: "Lavest tal vises først" }
+      - { name: excerpt, label: Kort tekst, type: text, description: "Vises i oversigten og under overskriften" }
+      - { name: introHeading, label: Intro, overskrift, type: string }
+      - { name: intro, label: Intro, afsnit, type: text, list: true }
+      - name: offerings
+        label: Hvad jeg tilbyder
+        type: object
+        list:
+          collapsible:
+            summary: "{fields.title}"
+        fields:
+          - { name: title, label: Titel, type: string }
+          - { name: items, label: Punkter, type: string, list: true }
+      - { name: included, label: "Hvad får du med, afsnit", type: text, list: true }
+      - { name: features, label: "Hvad får du med, fordele", type: string, list: true }
+      - name: process
+        label: Udviklingsprocessen
+        type: object
+        list:
+          collapsible:
+            summary: "{fields.title}"
+        fields:
+          - { name: title, label: Titel, type: string }
+          - { name: text, label: Tekst, type: text }
+      - { name: draft, label: Kladde, type: boolean }
+
+  - name: services-side
+    label: Services-oversigt
+    type: file
+    path: src/content/pages/services.md
+    format: yaml-frontmatter
+    fields:
+      - { name: title, label: Titel, type: string, required: true }
+      - { name: description, label: SEO-beskrivelse, type: text }
+      - { name: eyebrow, label: Lille linje over overskriften, type: string }
+      - { name: heroTitle, label: Overskrift, type: string }
+      - { name: introHeading, label: Intro, overskrift, type: string }
+      - { name: introText, label: Intro, tekst, type: text }
+      - { name: processHeading, label: Proces, overskrift, type: string }
+      - { name: processText, label: Proces, tekst, type: text }
+      - name: process
+        label: Proces, trin
+        type: object
+        list:
+          collapsible:
+            summary: "{fields.title}"
+        fields:
+          - { name: title, label: Titel, type: string }
+          - { name: text, label: Tekst, type: text }
+      - { name: contactHeading, label: "Kontaktboks på undersider, overskrift", type: string }
+      - { name: contactText, label: "Kontaktboks på undersider, tekst", type: text }
+      - { name: ctaLabel, label: Knaptekst, type: string }
+
   - name: blog
     label: Blog
     type: collection
