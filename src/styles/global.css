@@ -7,12 +7,15 @@
 
 @theme {
   /* ---- Farver ---------------------------------------------------------
-     Næsten monokromt. Billederne bærer farven, ikke fladerne. */
-  --color-paper: #ffffff;
-  --color-shade: #f5f5f7;
-  --color-line: #e5e5e7;
-  --color-muted: #6e6e73;
-  --color-ink: #1d1d1f;
+     Næsten monokromt. Billederne bærer farven, ikke fladerne. Neutralerne
+     har et svagt strejf af accentens grønne tone, og accenten bruges kun
+     på knapperne. Alle tekstpar består WCAG AA. */
+  --color-paper: oklch(0.995 0.002 160);
+  --color-shade: oklch(0.97 0.004 160);
+  --color-line: oklch(0.91 0.005 160);
+  --color-muted: oklch(0.50 0.01 160);
+  --color-ink: oklch(0.22 0.01 160);
+  --color-accent: oklch(0.45 0.09 160);
 
   /* ---- Typografi ------------------------------------------------------
      Serif kun til overskrifter, Inter til alt andet. */
@@ -119,7 +122,7 @@ img { display: block; max-width: 100%; height: auto; }
   align-items: center;
   padding: var(--space-4) var(--space-8);
   border-radius: 999px;
-  background: var(--color-ink);
+  background: var(--color-accent);
   color: var(--color-paper);
   font-size: var(--text-sm);
   font-weight: 500;
