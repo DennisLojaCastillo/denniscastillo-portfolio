@@ -347,9 +347,9 @@ const featured = cases.slice(0, 4);
   }
   .hero-foot {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: var(--space-12);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-8);
     margin-top: var(--space-16);
   }
   .band-head { margin-bottom: var(--space-16); }
@@ -363,7 +363,6 @@ const featured = cases.slice(0, 4);
     .case-item:not(:has(.cover)) + .case-item:not(:has(.cover)) { margin-top: var(--space-12); }
   }
   @media (max-width: 800px) {
-    .hero-foot { flex-direction: column; align-items: flex-start; gap: var(--space-8); }
     .band-head { margin-bottom: var(--space-12); }
   }
 </style>
