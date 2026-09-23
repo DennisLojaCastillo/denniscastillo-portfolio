@@ -19,7 +19,7 @@ const words = text.split(' ');
   {
     words.map((word, i) => (
       <span class="word" style={`--delay:${i * stagger + 120}ms`}>
-        {word}
+        {word}{i < words.length - 1 ? ' ' : ''}
       </span>
     ))
   }
@@ -29,7 +29,6 @@ const words = text.split(' ');
   .blur-heading {
     display: flex;
     flex-wrap: wrap;
-    gap: 0 0.26em;
   }
   .word {
     display: inline-block;

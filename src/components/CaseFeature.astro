@@ -3,9 +3,10 @@ import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   item: CollectionEntry<'cases'>;
+  index: number;
 }
-const { item } = Astro.props;
-const { title, client, year, services, excerpt, cover } = item.data;
+const { item, index } = Astro.props;
+const { title, client, year, tags, excerpt, cover } = item.data;
 ---
 
 <article>
@@ -13,7 +14,7 @@ const { title, client, year, services, excerpt, cover } = item.data;
     <div class="cover">
       {
         cover ? (
-          <img src={cover} alt="" width="1280" height="800" loading="lazy" decoding="async" />
+          <img src={cover} alt="" width="1600" height="1000" loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
         ) : (
           <div class="cover-slot"><span class="eyebrow">Cover mangler</span></div>
         )
@@ -22,65 +23,88 @@ const { title, client, year, services, excerpt, cover } = item.data;
 
     <div class="meta">
       <h3 class="title display">{title}</h3>
+      <p class="facts eyebrow">{[client, year].filter(Boolean).join('  ·  ')}</p>
       {excerpt && <p class="excerpt">{excerpt}</p>}
-      <p class="facts eyebrow">
-        {[client, year, services.join(' / ')].filter(Boolean).join('  ·  ')}
-      </p>
+      {
+        tags.length > 0 && (
+          <ul class="tags">
+            {tags.map((t) => <li>{t}</li>)}
+          </ul>
+        )
+      }
     </div>
   </a>
 </article>
 
 <style>
-  article + article { margin-top: 5rem; }
+  article + article { margin-top: var(--space-32); }
 
   .cover {
     overflow: hidden;
     background: var(--color-shade);
+    border-radius: var(--space-3);
   }
   .cover img,
   .cover-slot {
     width: 100%;
     aspect-ratio: 16 / 10;
     object-fit: cover;
-    transition: scale var(--duration-slow) var(--ease-out-soft);
   }
-  .cover-slot {
-    display: grid;
-    place-items: center;
+  .cover-slot { display: grid; place-items: center; }
+
+  /* Billedet traekker sig roligt paa plads mens det kommer i syne.
+     Scroll-drevet, saa ingen JavaScript. Browsere uden understoettelse
+     viser det bare stille. */
+  .cover img {
+    animation: cover-settle linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 40%;
   }
-  a:hover .cover img { scale: 1.02; }
+  @keyframes cover-settle {
+    from { scale: 1.06; }
+    to { scale: 1; }
+  }
 
   .meta {
     display: grid;
     grid-template-columns: 1fr auto;
-    gap: 0.75rem 3rem;
+    gap: var(--space-3) var(--space-12);
     align-items: baseline;
-    margin-top: 1.5rem;
+    margin-top: var(--space-6);
   }
-  .title {
-    font-size: clamp(1.75rem, 4vw, 3rem);
-    margin: 0;
-  }
+  .title { font-size: var(--text-3xl); margin: 0; }
+  .facts { grid-row: 1; grid-column: 2; margin: 0; text-align: right; }
   .excerpt {
     grid-column: 1 / -1;
     margin: 0;
     max-width: 52ch;
     color: var(--color-muted);
-    font-size: 0.9375rem;
   }
-  .facts {
-    grid-row: 1;
-    grid-column: 2;
-    margin: 0;
-    text-align: right;
+  .tags {
+    grid-column: 1 / -1;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: var(--space-2) 0 0;
+    padding: 0;
+  }
+  .tags li {
+    font-size: var(--text-xs);
+    letter-spacing: 0.02em;
+    color: var(--color-muted);
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: var(--space-1) var(--space-3);
   }
 
   @media (max-width: 700px) {
-    article + article { margin-top: 3.5rem; }
+    article + article { margin-top: var(--space-24); }
     .meta { grid-template-columns: 1fr; }
     .facts { grid-row: auto; grid-column: 1; text-align: left; }
+    .title { font-size: var(--text-2xl); }
   }
   @media (prefers-reduced-motion: reduce) {
-    a:hover .cover img { scale: 1; }
+    .cover img { animation: none; }
   }
 </style>

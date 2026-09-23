@@ -10,6 +10,7 @@ const cases = defineCollection({
     year: z.number().optional(),
     order: z.number().default(0),
     services: z.array(z.string()).default([]),
+    tags: z.array(z.string()).default([]),
     excerpt: z.string().optional(),
     cover: z.string().optional(),
     gallery: z.array(z.string()).default([]),
@@ -38,8 +39,12 @@ const pages = defineCollection({
 
     // Felter herunder bruges kun af forsiden. De oevrige sider har titel,
     // beskrivelse og broedtekst, og lader resten staa tomt.
+    /** Lille linje over overskriften. Fx din rolle. */
+    eyebrow: z.string().optional(),
     heroTitle: z.string().optional(),
+    heroLead: z.string().optional(),
     heroText: z.string().optional(),
+    ctaLabel: z.string().optional(),
     /** Tom eller udeladt betyder at maerket i headeren ikke vises. */
     availability: z.string().optional(),
     portrait: z.string().optional(),
@@ -48,9 +53,12 @@ const pages = defineCollection({
     services: z
       .array(z.object({ title: z.string(), text: z.string().optional() }))
       .default([]),
+    workLead: z.string().optional(),
     aboutLead: z.string().optional(),
     aboutText: z.array(z.string()).default([]),
+    quote: z.string().optional(),
     contactHeading: z.string().optional(),
+    contactText: z.string().optional(),
   }),
 });
 

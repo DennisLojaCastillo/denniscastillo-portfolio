@@ -11,9 +11,11 @@ interface Props {
   description?: string;
   /** Vises som maerke i headeren. Tom eller udeladt skjuler det. */
   availability?: string;
+  /** Knap i headeren. Udeladt betyder ingen knap. */
+  ctaLabel?: string;
 }
 
-const { title, description, availability } = Astro.props;
+const { title, description, availability, ctaLabel } = Astro.props;
 const pageTitle = title ? `${title} | ${settings.siteName}` : settings.seoTitle;
 const pageDescription = description ?? settings.seoDescription;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -42,7 +44,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   </head>
   <body>
     <a class="skip" href="#indhold">Spring til indhold</a>
-    <Header availability={availability} />
+    <Header availability={availability} ctaLabel={ctaLabel} />
     <main id="indhold">
       <slot />
     </main>

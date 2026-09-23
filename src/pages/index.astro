@@ -5,7 +5,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import BlurHeading from '../components/BlurHeading.astro';
 import Reveal from '../components/Reveal.astro';
 import CaseFeature from '../components/CaseFeature.astro';
-import CaseList from '../components/CaseList.astro';
 import Services from '../components/Services.astro';
 
 const page = await getEntry('pages', 'forside');
@@ -14,19 +13,19 @@ if (!page) throw new Error('src/content/pages/forside.md mangler');
 const cases = (await getCollection('cases', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order
 );
-
-// De to foerste vises stort med cover. Resten som typografisk liste,
-// saa forsiden ikke bliver uendelig lang.
-const featured = cases.slice(0, 2);
-const rest = cases.slice(2, 6);
+const featured = cases.slice(0, 4);
 ---
 
 <BaseLayout
   title={page.data.title}
   description={page.data.description}
   availability={page.data.availability}
+  ctaLabel={page.data.ctaLabel}
 >
+  <!-- 1. Hero ---------------------------------------------------------- -->
   <section class="hero">
+    {page.data.eyebrow && <p class="eyebrow role">{page.data.eyebrow}</p>}
+
     <BlurHeading
       as="h1"
       text={page.data.heroTitle ?? page.data.title}
@@ -34,147 +33,222 @@ const rest = cases.slice(2, 6);
       class="hero-title display"
     />
 
-    <Reveal delay={700} class="hero-meta">
-      <div class="hero-text">
-        <p>{page.data.heroText}</p>
+    <Reveal delay={800} class="hero-foot">
+      <div>
+        {page.data.heroLead && <p class="hero-lead">{page.data.heroLead}</p>}
+        {page.data.heroText && <p class="hero-text">{page.data.heroText}</p>}
       </div>
-      <figure class="portrait">
-        {
-          page.data.portrait ? (
-            <img
-              src={page.data.portrait}
-              alt={page.data.portraitAlt ?? ''}
-              width="560"
-              height="700"
-              loading="eager"
-              decoding="async"
-            />
-          ) : (
-            <div class="portrait-slot"><span class="eyebrow">Portræt</span></div>
-          )
-        }
-      </figure>
+      <a class="hero-cta" href="#arbejde">
+        Se projekterne
+        <span aria-hidden="true">&darr;</span>
+      </a>
     </Reveal>
   </section>
 
-  <section id="arbejde" class="work">
-    <h2 class="eyebrow">Udvalgt arbejde</h2>
-
-    {
-      cases.length === 0 && (
-        <p class="empty">Ingen cases endnu. Opret den første i Pages CMS.</p>
-      )
-    }
-
-    {featured.map((item) => <Reveal><CaseFeature item={item} /></Reveal>)}
-
-    {
-      rest.length > 0 && (
-        <Reveal class="rest">
-          <CaseList items={rest} />
-        </Reveal>
-      )
-    }
-
-    {
-      cases.length > featured.length + rest.length && (
-        <a class="more" href="/cases">Se alle {cases.length} cases</a>
-      )
-    }
-  </section>
-
-  <section id="ydelser" class="services-section">
-    <h2 class="eyebrow">Hvad jeg laver</h2>
-    <Reveal>
+  <!-- 2. Ydelser ------------------------------------------------------- -->
+  <section id="ydelser" class="band">
+    <Reveal class="band-head">
+      <h2 class="eyebrow">Hvad jeg kan hjælpe med</h2>
+    </Reveal>
+    <Reveal delay={100}>
       <Services items={page.data.services} />
     </Reveal>
   </section>
 
-  <section id="om" class="about">
-    <h2 class="eyebrow">Om</h2>
-    <Reveal>
-      <p class="lead display">{page.data.aboutLead}</p>
+  <!-- 3. Projekter ----------------------------------------------------- -->
+  <section id="arbejde" class="band work">
+    <Reveal class="band-head">
+      <h2 class="eyebrow">Udvalgte projekter</h2>
+      {page.data.workLead && <p class="band-lead">{page.data.workLead}</p>}
     </Reveal>
+
     {
-      page.data.aboutText.length > 0 && (
-        <Reveal delay={120}>
-          <div class="about-cols">
-            {page.data.aboutText.map((t) => <p>{t}</p>)}
-          </div>
+      featured.length > 0 ? (
+        featured.map((item, i) => (
+          <Reveal>
+            <CaseFeature item={item} index={i} />
+          </Reveal>
+        ))
+      ) : (
+        <p class="empty">Ingen projekter endnu. Opret det første i Pages CMS.</p>
+      )
+    }
+
+    {
+      cases.length > featured.length && (
+        <Reveal>
+          <a class="more" href="/cases">Se alle {cases.length} projekter</a>
         </Reveal>
       )
     }
   </section>
 
-  <section id="kontakt" class="contact">
-    <h2 class="eyebrow">Kontakt</h2>
+  <!-- 4. Om ------------------------------------------------------------ -->
+  <section id="om" class="band about">
+    <Reveal class="band-head">
+      <h2 class="eyebrow">Om mig</h2>
+    </Reveal>
+
+    <div class="about-grid">
+      <Reveal class="about-text">
+        {page.data.aboutLead && <p class="about-lead display">{page.data.aboutLead}</p>}
+        {page.data.aboutText.map((t) => <p class="about-body">{t}</p>)}
+      </Reveal>
+
+      <Reveal delay={120} class="about-side">
+        <figure class="portrait">
+          {
+            page.data.portrait ? (
+              <img src={page.data.portrait} alt={page.data.portraitAlt ?? ''} width="720" height="900" loading="lazy" decoding="async" />
+            ) : (
+              <div class="portrait-slot"><span class="eyebrow">Portræt</span></div>
+            )
+          }
+        </figure>
+      </Reveal>
+    </div>
+
+    {
+      page.data.quote && (
+        <Reveal>
+          <blockquote class="quote display">{page.data.quote}</blockquote>
+        </Reveal>
+      )
+    }
+  </section>
+
+  <!-- 5. Kontakt ------------------------------------------------------- -->
+  <section id="kontakt" class="band contact">
+    <Reveal class="band-head">
+      <h2 class="eyebrow">Kontakt</h2>
+    </Reveal>
     <Reveal>
-      <p class="contact-heading display">{page.data.contactHeading}</p>
-      <a class="mail display" href={`mailto:${settings.email}`}>{settings.email}</a>
+      {page.data.contactHeading && <p class="contact-heading display">{page.data.contactHeading}</p>}
+      {page.data.contactText && <p class="contact-text">{page.data.contactText}</p>}
+      <a class="mail" href={`mailto:${settings.email}`}>{settings.email}</a>
     </Reveal>
   </section>
 </BaseLayout>
 
 <style>
   section {
-    max-width: 76rem;
+    max-width: var(--measure);
     margin-inline: auto;
   }
 
+  /* Hero ------------------------------------------------------------- */
   .hero {
-    min-height: 82svh;
+    min-height: 84svh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 2rem 0 5rem;
+    padding: var(--space-16) 0 var(--space-24);
   }
+  .role { margin: 0 0 var(--space-8); }
 
-  .work { padding: 6rem 0; }
-  .services-section { padding: 5rem 0 6rem; border-top: 1px solid var(--color-line); }
-  .about { padding: 5rem 0 6rem; border-top: 1px solid var(--color-line); }
-  .contact { padding: 5rem 0 9rem; border-top: 1px solid var(--color-line); }
+  .hero-lead {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-lg);
+    letter-spacing: -0.015em;
+  }
+  .hero-text {
+    margin: 0;
+    max-width: 52ch;
+    color: var(--color-muted);
+    line-height: 1.65;
+  }
+  .hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    white-space: nowrap;
+    font-size: var(--text-sm);
+    border-bottom: 1px solid var(--color-line);
+    padding-bottom: var(--space-2);
+    transition: border-color var(--duration-fast) ease;
+  }
+  .hero-cta:hover { border-color: var(--color-ink); }
+  .hero-cta span { transition: translate var(--duration-base) var(--ease-out-soft); }
+  .hero-cta:hover span { translate: 0 0.2rem; }
 
-  h2.eyebrow { margin: 0 0 2.5rem; font-weight: 400; }
+  /* Baand ------------------------------------------------------------- */
+  .band { padding: var(--space-24) 0; border-top: 1px solid var(--color-line); }
+  .band-lead {
+    margin: var(--space-4) 0 0;
+    max-width: 54ch;
+    color: var(--color-muted);
+    font-size: var(--text-md);
+    line-height: 1.65;
+  }
+  .work { padding-bottom: var(--space-32); }
 
-  .empty { color: var(--color-muted); font-size: 0.9375rem; }
+  .empty { color: var(--color-muted); }
   .more {
     display: inline-block;
-    margin-top: 3rem;
-    font-size: 0.875rem;
-    border-bottom: 1px solid currentColor;
-    padding-bottom: 0.25rem;
+    margin-top: var(--space-16);
+    font-size: var(--text-sm);
     color: var(--color-muted);
+    border-bottom: 1px solid currentColor;
+    padding-bottom: var(--space-1);
     transition: color var(--duration-fast) ease;
   }
   .more:hover { color: var(--color-ink); }
 
-  .lead {
-    font-size: clamp(1.875rem, 4.5vw, 3.5rem);
-    margin: 0 0 4rem;
+  /* Om ---------------------------------------------------------------- */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--space-16);
+    align-items: start;
+  }
+  .about-lead {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-8);
+    max-width: 16ch;
+  }
+  .about-body {
+    margin: 0 0 var(--space-4);
+    color: var(--color-muted);
+    line-height: 1.7;
+    max-width: 48ch;
+  }
+  .portrait img,
+  .portrait-slot {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--space-3);
+  }
+  .portrait-slot { background: var(--color-shade); display: grid; place-items: center; }
+
+  .quote {
+    margin: var(--space-24) 0 0;
+    padding: 0;
+    font-size: var(--text-2xl);
+    max-width: 24ch;
+    color: var(--color-ink);
+  }
+  .quote::before { content: '\201C'; }
+  .quote::after { content: '\201D'; }
+
+  /* Kontakt ------------------------------------------------------------ */
+  .contact { padding-bottom: var(--space-40); }
+  .contact-heading {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-4);
     max-width: 18ch;
   }
-  .about-cols {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 3rem;
-    max-width: 58rem;
-  }
-  .about-cols p {
-    margin: 0;
+  .contact-text {
+    margin: 0 0 var(--space-12);
     color: var(--color-muted);
-    font-size: 0.9375rem;
-    line-height: 1.7;
-  }
-
-  .contact-heading {
-    font-size: clamp(1.5rem, 3.5vw, 2.5rem);
-    margin: 0 0 2rem;
-    max-width: 20ch;
+    max-width: 44ch;
   }
   .mail {
     display: inline-block;
-    font-size: clamp(1.5rem, 5.5vw, 4.5rem);
+    font-family: var(--font-display);
+    font-size: var(--text-4xl);
     line-height: 1;
+    letter-spacing: -0.02em;
     background-image: linear-gradient(currentColor, currentColor);
     background-size: 0% 1px;
     background-repeat: no-repeat;
@@ -184,56 +258,36 @@ const rest = cases.slice(2, 6);
   .mail:hover { background-size: 100% 1px; }
 
   @media (max-width: 800px) {
-    .about-cols { grid-template-columns: 1fr; gap: 2rem; }
-    .work { padding: 4rem 0; }
+    .about-grid { grid-template-columns: 1fr; gap: var(--space-12); }
+    .about-side { max-width: 20rem; }
+    .band { padding: var(--space-16) 0; }
+    .quote { margin-top: var(--space-16); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cta:hover span { translate: none; }
   }
 </style>
 
 <style is:global>
-  /* Reglerne herunder rammer elementer fra BlurHeading og Reveal, som
-     Astros scoped styles ikke naar ind i. */
+  /* Rammer elementer fra BlurHeading og Reveal, som Astros scoped styles
+     ikke naar ind i. */
   .hero-title {
     margin: 0;
-    font-size: clamp(2.75rem, 11vw, 9.5rem);
-    line-height: 0.9;
+    font-size: clamp(3rem, 10vw, 8.5rem);
+    line-height: 0.92;
+    max-width: 14ch;
   }
-  .hero-meta {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 3rem;
-    align-items: end;
-    margin-top: 3.5rem;
+  .hero-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-12);
+    margin-top: var(--space-16);
   }
-  .hero-meta .hero-text p {
-    margin: 0;
-    max-width: 46ch;
-    color: var(--color-muted);
-    font-size: 0.9375rem;
-  }
-  .hero-meta .portrait {
-    margin: 0;
-    width: clamp(8rem, 18vw, 14rem);
-  }
-  .hero-meta .portrait img,
-  .hero-meta .portrait-slot {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-  }
-  .hero-meta .portrait-slot {
-    background: var(--color-shade);
-    display: grid;
-    place-items: center;
-  }
-  .rest { margin-top: 5rem; }
+  .band-head { margin-bottom: var(--space-16); }
 
-  @media (max-width: 700px) {
-    .hero-meta {
-      grid-template-columns: auto 1fr;
-      align-items: center;
-      gap: 1.5rem;
-    }
-    .hero-meta .portrait { order: -1; width: 5.5rem; }
-    .rest { margin-top: 3.5rem; }
+  @media (max-width: 800px) {
+    .hero-foot { flex-direction: column; align-items: flex-start; gap: var(--space-8); }
+    .band-head { margin-bottom: var(--space-12); }
   }
 </style>

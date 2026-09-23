@@ -1,21 +1,27 @@
 ---
 title: Forside
-description: Portfolio for Dennis Castillo. Web design og udvikling fra Sjælland.
-heroTitle: Design og kode der holder.
-heroText: Freelance web designer og udvikler fra Sjælland. Jeg arbejder hele vejen, fra første skitse til den drift der kommer bagefter. Det giver færre overleveringer og et resultat der faktisk kan vedligeholdes.
+description: Dennis Castillo. Softwareudvikler, webudvikler og digital konsulent. Hjemmesider, webapps og mobilapps der skaber værdi.
+eyebrow: Softwareudvikler, webudvikler og digital konsulent
+heroTitle: Fra idé til digital virkelighed
+heroLead: Jeg udvikler digitale løsninger, der skaber værdi
+heroText: Jeg hjælper virksomheder med at udvikle hjemmesider, webapps, mobilapps og digitale løsninger, der styrker forretningen, effektiviserer arbejdsgange og skaber vækst.
+ctaLabel: Start projekt
 availability: ""
 portrait: ""
 portraitAlt: Dennis Castillo
 services:
-  - title: Design
-    text: Interfaces der er rolige at se på og enkle at bruge. Jeg tegner i browseren, så det du godkender er det du får.
-  - title: Udvikling
-    text: Kodede sites uden pagebuilder. Hurtige at indlæse, nemme at rette, og uden plugins der skal holdes i live.
-  - title: Drift
-    text: Automatisk udgivelse, versioneret indhold og overvågning. En rettelse er live et minut senere.
-aboutLead: Jeg arbejder alene, hele vejen fra skitse til drift. Færre led mellem beslutning og kode.
+  - title: Webapps og platforme
+    text: Skræddersyede webapps og platforme udviklet til virksomhedens behov.
+  - title: Webdesign og webshops
+    text: Moderne hjemmesider og webshops med fokus på design, performance og konverteringer.
+  - title: Mobilapps
+    text: Apps til iOS og Android med fokus på brugervenlighed og funktionalitet.
+workLead: Et udvalg af projekter inden for hjemmesider, webapps, mobilapps og digitale platforme. Fælles for dem alle er fokus på brugervenlighed, performance og forretningsværdi.
+aboutLead: Teknologi med fokus på mennesker og forretning
 aboutText:
-  - Skriv et afsnit om din baggrund her. Hvor længe du har arbejdet med websites, og hvilke slags kunder du arbejder for.
-  - Skriv et afsnit om hvordan du arbejder. Hvad kunden får ud af det, ikke hvilke værktøjer du bruger.
-contactHeading: Har du noget der skal bygges?
+  - Mit navn er Dennis Castillo, og jeg arbejder med udvikling af hjemmesider, webapps, mobilapps og digitale platforme.
+  - Jeg kombinerer teknisk forståelse med forretningsindsigt for at skabe løsninger, der giver værdi i praksis.
+quote: Jeg tror på løsninger, der skaber værdi for både mennesker og virksomheder.
+contactHeading: Lad os skabe noget, der gør en forskel
+contactText: Har du brug for en hjemmeside, webapp eller mobilapp? Lad os tage en snak.
 ---

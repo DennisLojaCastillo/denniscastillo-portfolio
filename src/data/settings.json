@@ -1,18 +1,32 @@
 {
   "siteName": "Dennis Castillo",
-  "tagline": "Web design og udvikling",
-  "seoTitle": "Dennis Castillo",
-  "seoDescription": "Portfolio for Dennis Castillo, web design og udvikling.",
-  "email": "dc@zrm.dk",
+  "tagline": "Softwareudvikler, webudvikler og digital konsulent",
+  "seoTitle": "Dennis Castillo | Softwareudvikler og digital konsulent",
+  "seoDescription": "Hjemmesider, webapps og mobilapps der styrker forretningen. Freelance udvikling fra Sjælland.",
+  "email": "kontakt@denniscastillo.dk",
   "nav": [
-    { "label": "Cases", "url": "/cases" },
-    { "label": "Om", "url": "/om" },
-    { "label": "Blog", "url": "/blog" },
-    { "label": "Kontakt", "url": "/kontakt" }
+    {
+      "label": "Projekter",
+      "url": "/cases"
+    },
+    {
+      "label": "Om mig",
+      "url": "/om"
+    },
+    {
+      "label": "Kontakt",
+      "url": "/kontakt"
+    }
   ],
   "social": [
-    { "label": "LinkedIn", "url": "https://www.linkedin.com/" },
-    { "label": "GitHub", "url": "https://github.com/" }
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/"
+    },
+    {
+      "label": "GitHub",
+      "url": "https://github.com/"
+    }
   ],
   "footerText": "Dennis Castillo"
 }
