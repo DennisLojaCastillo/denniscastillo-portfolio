@@ -40,7 +40,9 @@ const path = Astro.url.pathname;
     /* Baggrunden træder frem når man scroller. Scroll-drevet animation,
        så det koster ingen JavaScript. Browsere uden understøttelse får
        bare en gennemsigtig header, hvilket også er fint. */
-    animation: header-solid linear both;
+    animation-name: header-solid;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
     animation-timeline: scroll();
     animation-range: 0 8rem;
   }
