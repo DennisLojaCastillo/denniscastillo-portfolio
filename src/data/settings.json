@@ -6,16 +6,20 @@
   "email": "kontakt@denniscastillo.dk",
   "nav": [
     {
-      "label": "Projekter",
-      "url": "/cases"
+      "label": "Portfolio",
+      "url": "/portfolio/"
+    },
+    {
+      "label": "Services",
+      "url": "/services/"
     },
     {
       "label": "Om mig",
-      "url": "/om"
+      "url": "/om-mig/"
     },
     {
-      "label": "Kontakt",
-      "url": "/kontakt"
+      "label": "FAQ",
+      "url": "/faq/"
     }
   ],
   "social": [

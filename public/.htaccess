@@ -1,4 +1,4 @@
-# Statisk site bygget med Astro. Apache skal kun vide tre ting.
+# Statisk site bygget med Astro. Apache skal kun vide fire ting.
 
 # 1. Brug vores egen 404-side i stedet for Apaches standard.
 ErrorDocument 404 /404.html
@@ -25,4 +25,11 @@ ErrorDocument 404 /404.html
   ExpiresByType text/css "access plus 1 year"
   ExpiresByType application/javascript "access plus 1 year"
   ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# 4. Det gamle WordPress-site havde et arkiv på /cases/. Oversigten hedder
+#    /portfolio/, som den gjorde på det gamle site. Case-siderne ligger
+#    stadig på /cases/<slug>/.
+<IfModule mod_alias.c>
+  RedirectMatch 301 ^/cases/?$ /portfolio/
 </IfModule>

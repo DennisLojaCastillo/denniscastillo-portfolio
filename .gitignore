@@ -11,3 +11,6 @@ npm-debug.log*
 
 # Referencemateriale fra det gamle WordPress-site, kommer ikke med i buildet
 reference/
+
+# Arbejdsfiler fra Playwright MCP
+.playwright-mcp/
