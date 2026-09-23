@@ -1,0 +1,53 @@
+---
+/**
+ * Overskrift hvor hvert ord glider op bag en maske, forskudt. Ren CSS.
+ */
+interface Props {
+  text: string;
+  as?: 'h1' | 'h2' | 'h3' | 'p';
+  class?: string;
+  /** Millisekunder mellem hvert ord. */
+  stagger?: number;
+}
+
+const { text, as: Tag = 'h1', class: className = '', stagger = 70 } = Astro.props;
+const words = text.split(' ');
+---
+
+<Tag class:list={['mask-heading', className]}>
+  {
+    words.map((word, i) => (
+      <>
+        <span class="mask">
+          <span class="word" style={`--delay:${i * stagger + 150}ms`}>{word}</span>
+        </span>
+        {i < words.length - 1 ? ' ' : ''}
+      </>
+    ))
+  }
+</Tag>
+
+<style>
+  /* Masken er lidt højere end linjen, så accenter og descendere ikke
+     klippes. Den negative margin holder linjeafstanden uændret. */
+  .mask {
+    display: inline-block;
+    overflow: clip;
+    padding-block: 0.12em;
+    margin-block: -0.12em;
+    vertical-align: bottom;
+  }
+  .word {
+    display: inline-block;
+    animation: word-up var(--duration-slow) var(--ease-out-soft) backwards;
+    animation-delay: var(--delay);
+  }
+
+  @keyframes word-up {
+    from { transform: translateY(110%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .word { animation: none; }
+  }
+</style>

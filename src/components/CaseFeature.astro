@@ -13,14 +13,14 @@ const { title, client, year, tags, excerpt, cover } = item.data;
   <a href={`/cases/${item.id}`}>
     {
       cover && (
-        <div class="cover">
+        <div class="cover" style={`view-transition-name: case-cover-${item.id}`}>
           <img src={cover} alt="" width="1600" height="1000" loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
         </div>
       )
     }
 
     <div class="meta">
-      <h3 class="title display">{title}</h3>
+      <h3 class="title display" style={`view-transition-name: case-title-${item.id}`}>{title}</h3>
       <p class="facts eyebrow">{[client, year].filter(Boolean).join('  ·  ')}</p>
       {excerpt && <p class="excerpt">{excerpt}</p>}
       {

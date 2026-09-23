@@ -127,7 +127,19 @@ img { display: block; max-width: 100%; height: auto; }
 .reveal.in { opacity: 1; transform: none; }
 :root:not(.js) .reveal { opacity: 1; transform: none; }
 
+/* ---- Sideskift ------------------------------------------------------
+   Native view transitions mellem sider, uden JavaScript. Case-cover og
+   titel har samme view-transition-name på forsiden og case-siden, så de
+   glider over i hinanden. Browsere uden understøttelse skifter bare side. */
+@view-transition { navigation: auto; }
+
+::view-transition-group(*) {
+  animation-duration: var(--duration-base);
+  animation-timing-function: var(--ease-out-soft);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
 }
