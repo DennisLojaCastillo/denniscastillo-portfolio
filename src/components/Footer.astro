@@ -14,15 +14,20 @@ const year = new Date().getFullYear();
   footer {
     display: flex;
     justify-content: space-between;
-    gap: 1.5rem;
-    padding: 1.75rem var(--gutter, 2rem);
+    gap: var(--space-6);
+    padding: var(--space-8) var(--gutter, 2rem);
     border-top: 1px solid var(--color-line);
-    font-size: 0.6875rem;
+    font-size: var(--text-xs);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-muted);
   }
-  .links { display: flex; gap: 1.5rem; }
-  .links a { transition: color var(--duration-fast) ease; }
+  .links { display: flex; gap: var(--space-6); }
+  /* Større klikflade på touch uden at flytte layoutet. */
+  .links a {
+    padding-block: var(--space-3);
+    margin-block: calc(-1 * var(--space-3));
+    transition: color var(--duration-fast) ease;
+  }
   .links a:hover { color: var(--color-ink); }
 </style>

@@ -11,15 +11,13 @@ const { title, client, year, tags, excerpt, cover } = item.data;
 
 <article>
   <a href={`/cases/${item.id}`}>
-    <div class="cover">
-      {
-        cover ? (
+    {
+      cover && (
+        <div class="cover">
           <img src={cover} alt="" width="1600" height="1000" loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
-        ) : (
-          <div class="cover-slot"><span class="eyebrow">Cover mangler</span></div>
-        )
-      }
-    </div>
+        </div>
+      )
+    }
 
     <div class="meta">
       <h3 class="title display">{title}</h3>
@@ -37,20 +35,16 @@ const { title, client, year, tags, excerpt, cover } = item.data;
 </article>
 
 <style>
-  article + article { margin-top: var(--space-32); }
-
   .cover {
     overflow: hidden;
     background: var(--color-shade);
     border-radius: var(--space-3);
   }
-  .cover img,
-  .cover-slot {
+  .cover img {
     width: 100%;
     aspect-ratio: 16 / 10;
     object-fit: cover;
   }
-  .cover-slot { display: grid; place-items: center; }
 
   /* Billedet trækker sig roligt på plads mens det kommer i syne.
      Scroll-drevet, så ingen JavaScript. Browsere uden understøttelse
@@ -72,7 +66,14 @@ const { title, client, year, tags, excerpt, cover } = item.data;
     align-items: baseline;
     margin-top: var(--space-6);
   }
-  .title { font-size: var(--text-3xl); margin: 0; }
+  .title {
+    font-size: var(--text-3xl);
+    margin: 0;
+    text-decoration: underline 1px transparent;
+    text-underline-offset: 0.12em;
+    transition: text-decoration-color var(--duration-fast) ease;
+  }
+  a:hover .title { text-decoration-color: currentColor; }
   .facts { grid-row: 1; grid-column: 2; margin: 0; text-align: right; }
   .excerpt {
     grid-column: 1 / -1;
@@ -99,7 +100,6 @@ const { title, client, year, tags, excerpt, cover } = item.data;
   }
 
   @media (max-width: 700px) {
-    article + article { margin-top: var(--space-24); }
     .meta { grid-template-columns: 1fr; }
     .facts { grid-row: auto; grid-column: 1; text-align: left; }
     .title { font-size: var(--text-2xl); }

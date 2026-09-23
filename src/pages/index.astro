@@ -65,7 +65,7 @@ const featured = cases.slice(0, 4);
     {
       featured.length > 0 ? (
         featured.map((item, i) => (
-          <Reveal>
+          <Reveal class="case-item">
             <CaseFeature item={item} index={i} />
           </Reveal>
         ))
@@ -95,17 +95,15 @@ const featured = cases.slice(0, 4);
         {page.data.aboutText.map((t) => <p class="about-body">{t}</p>)}
       </Reveal>
 
-      <Reveal delay={120} class="about-side">
-        <figure class="portrait">
-          {
-            page.data.portrait ? (
+      {
+        page.data.portrait && (
+          <Reveal delay={120} class="about-side">
+            <figure class="portrait">
               <img src={page.data.portrait} alt={page.data.portraitAlt ?? ''} width="720" height="900" loading="lazy" decoding="async" />
-            ) : (
-              <div class="portrait-slot"><span class="eyebrow">Portræt</span></div>
-            )
-          }
-        </figure>
-      </Reveal>
+            </figure>
+          </Reveal>
+        )
+      }
     </div>
 
     {
@@ -212,14 +210,12 @@ const featured = cases.slice(0, 4);
     line-height: 1.7;
     max-width: 48ch;
   }
-  .portrait img,
-  .portrait-slot {
+  .portrait img {
     width: 100%;
     aspect-ratio: 4 / 5;
     object-fit: cover;
     border-radius: var(--space-3);
   }
-  .portrait-slot { background: var(--color-shade); display: grid; place-items: center; }
 
   .quote {
     margin: var(--space-24) 0 0;
@@ -246,7 +242,9 @@ const featured = cases.slice(0, 4);
   .mail {
     display: inline-block;
     font-family: var(--font-display);
-    font-size: var(--text-4xl);
+    max-width: 100%;
+    font-size: clamp(1.5rem, 7vw, var(--text-4xl));
+    overflow-wrap: anywhere;
     line-height: 1;
     letter-spacing: -0.02em;
     background-image: linear-gradient(currentColor, currentColor);
@@ -285,7 +283,15 @@ const featured = cases.slice(0, 4);
     margin-top: var(--space-16);
   }
   .band-head { margin-bottom: var(--space-16); }
+  /* Margin sidder på Reveal-wrapperen, da hver case er pakket ind i én. */
+  .case-item + .case-item { margin-top: var(--space-32); }
+  /* Uden cover er en case kun tekst, og den store afstand virker tom. */
+  .case-item:not(:has(.cover)) + .case-item:not(:has(.cover)) { margin-top: var(--space-16); }
 
+  @media (max-width: 700px) {
+    .case-item + .case-item { margin-top: var(--space-24); }
+    .case-item:not(:has(.cover)) + .case-item:not(:has(.cover)) { margin-top: var(--space-12); }
+  }
   @media (max-width: 800px) {
     .hero-foot { flex-direction: column; align-items: flex-start; gap: var(--space-8); }
     .band-head { margin-bottom: var(--space-12); }

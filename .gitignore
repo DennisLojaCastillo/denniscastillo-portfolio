@@ -5,3 +5,6 @@ dist/
 .env
 .env.*
 npm-debug.log*
+
+# Designkontekst til design-skills, kun lokalt
+.impeccable.md
