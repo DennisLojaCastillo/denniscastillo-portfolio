@@ -6,6 +6,7 @@ import MaskHeading from '../components/MaskHeading.astro';
 import Reveal from '../components/Reveal.astro';
 import CaseFeature from '../components/CaseFeature.astro';
 import Services from '../components/Services.astro';
+import Process from '../components/Process.astro';
 
 const page = await getEntry('pages', 'forside');
 if (!page) throw new Error('src/content/pages/forside.md mangler');
@@ -81,6 +82,38 @@ const featured = cases.slice(0, 4);
       )
     }
   </section>
+
+  <!-- Proces og ramme ------------------------------------------------ -->
+  {
+    page.data.process.length > 0 && (
+      <section id="proces" class="band">
+        <Process heading={page.data.processHeading} steps={page.data.process} />
+
+        {
+          page.data.frame.length > 0 && (
+            <Reveal>
+              <dl class="frame">
+                {page.data.frame.map((f) => (
+                  <div>
+                    <dt class="frame-title display">{f.title}</dt>
+                    {f.text && <dd>{f.text}</dd>}
+                  </div>
+                ))}
+              </dl>
+            </Reveal>
+          )
+        }
+
+        {
+          page.data.ctaLabel && (
+            <Reveal>
+              <a class="process-cta" href="/kontakt">{page.data.ctaLabel}</a>
+            </Reveal>
+          )
+        }
+      </section>
+    )
+  }
 
   <!-- 4. Om ------------------------------------------------------------ -->
   <section id="om" class="band about">
@@ -190,6 +223,37 @@ const featured = cases.slice(0, 4);
     transition: color var(--duration-fast) ease;
   }
   .more:hover { color: var(--color-ink); }
+
+  /* Proces og ramme ------------------------------------------------- */
+  .frame {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--space-12);
+    margin: var(--space-24) 0 0;
+    padding-top: var(--space-12);
+    border-top: 1px solid var(--color-line);
+  }
+  .frame-title {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-3);
+  }
+  .frame dd {
+    margin: 0;
+    color: var(--color-muted);
+    max-width: 28ch;
+  }
+  .process-cta {
+    display: inline-flex;
+    margin-top: var(--space-16);
+    padding: var(--space-4) var(--space-8);
+    border-radius: 999px;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    transition: opacity var(--duration-fast) ease;
+  }
+  .process-cta:hover { opacity: 0.82; }
 
   /* Om ---------------------------------------------------------------- */
   .about-grid {

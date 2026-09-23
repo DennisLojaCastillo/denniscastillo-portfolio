@@ -73,6 +73,28 @@ content:
         fields:
           - { name: title, label: Titel, type: string }
           - { name: text, label: Tekst, type: text }
+      - { name: processHeading, label: Proces, overskrift, type: string }
+      - name: process
+        label: Proces, trin
+        type: object
+        list:
+          min: 2
+          max: 5
+          collapsible:
+            summary: "{fields.title}"
+        fields:
+          - { name: title, label: Titel, type: string }
+          - { name: text, label: Tekst, type: text }
+      - name: frame
+        label: Ramme (pris, tid, kontakt)
+        type: object
+        list:
+          max: 3
+          collapsible:
+            summary: "{fields.title}"
+        fields:
+          - { name: title, label: Titel, type: string }
+          - { name: text, label: Tekst, type: text }
       - { name: aboutLead, label: Om, hovedsætning, type: text }
       - { name: aboutText, label: Om, afsnit, type: text, list: true }
       - { name: contactHeading, label: Kontakt-overskrift, type: string }

@@ -54,6 +54,15 @@ const pages = defineCollection({
       .array(z.object({ title: z.string(), text: z.string().optional() }))
       .default([]),
     workLead: z.string().optional(),
+    processHeading: z.string().optional(),
+    /** Trinene i et samarbejde, i rækkefølge. */
+    process: z
+      .array(z.object({ title: z.string(), text: z.string().optional() }))
+      .default([]),
+    /** Korte udsagn om pris, tid og kontakt. Ingen beløb. */
+    frame: z
+      .array(z.object({ title: z.string(), text: z.string().optional() }))
+      .default([]),
     aboutLead: z.string().optional(),
     aboutText: z.array(z.string()).default([]),
     quote: z.string().optional(),
