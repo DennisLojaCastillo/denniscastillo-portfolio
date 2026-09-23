@@ -8,3 +8,6 @@ npm-debug.log*
 
 # Designkontekst til design-skills, kun lokalt
 .impeccable.md
+
+# Referencemateriale fra det gamle WordPress-site, kommer ikke med i buildet
+reference/
