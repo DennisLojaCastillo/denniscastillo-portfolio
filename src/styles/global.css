@@ -113,6 +113,22 @@ img { display: block; max-width: 100%; height: auto; }
   color: var(--color-muted);
 }
 
+/* Primær knap. Samme form som CTA'en i headeren, bare større. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-4) var(--space-8);
+  border-radius: 999px;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition:
+    opacity var(--duration-fast) ease,
+    translate var(--duration-base) var(--ease-out-soft);
+}
+.button:hover { opacity: 0.82; translate: 0 -2px; }
+
 /* ---- Scroll-reveal ---------------------------------------------------
    .in sættes af observeren i BaseLayout. Uden JavaScript vises indholdet
    med det samme, så siden aldrig står tom. */
@@ -142,4 +158,5 @@ img { display: block; max-width: 100%; height: auto; }
   @view-transition { navigation: none; }
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; transform: none; transition: none; }
+  .button:hover { translate: none; }
 }

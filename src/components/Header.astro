@@ -102,6 +102,8 @@ const path = Astro.url.pathname;
   }
   @media (max-width: 520px) {
     nav { display: none; }
+    /* Uden nav skubber intet længere CTA'en ud til højre. */
+    .end { margin-left: auto; }
   }
   @media (prefers-reduced-motion: reduce) {
     header { animation: none; background-color: var(--color-paper); border-bottom-color: var(--color-line); }

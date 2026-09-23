@@ -38,24 +38,17 @@ const featured = cases.slice(0, 4);
         {page.data.heroLead && <p class="hero-lead">{page.data.heroLead}</p>}
         {page.data.heroText && <p class="hero-text">{page.data.heroText}</p>}
       </div>
-      <a class="hero-cta" href="#arbejde">
-        Se projekterne
-        <span aria-hidden="true">&darr;</span>
-      </a>
+      <div class="hero-actions">
+        {page.data.ctaLabel && <a class="button" href="/kontakt">{page.data.ctaLabel}</a>}
+        <a class="hero-cta" href="#arbejde">
+          Se projekterne
+          <span aria-hidden="true">&darr;</span>
+        </a>
+      </div>
     </Reveal>
   </section>
 
-  <!-- 2. Ydelser ------------------------------------------------------- -->
-  <section id="ydelser" class="band">
-    <Reveal class="band-head">
-      <h2 class="eyebrow">Hvad jeg kan hjælpe med</h2>
-    </Reveal>
-    <Reveal delay={100}>
-      <Services items={page.data.services} />
-    </Reveal>
-  </section>
-
-  <!-- 3. Projekter ----------------------------------------------------- -->
+  <!-- 2. Projekter ----------------------------------------------------- -->
   <section id="arbejde" class="band work">
     <Reveal class="band-head">
       <h2 class="eyebrow">Udvalgte projekter</h2>
@@ -83,7 +76,7 @@ const featured = cases.slice(0, 4);
     }
   </section>
 
-  <!-- Proces og ramme ------------------------------------------------ -->
+  <!-- 3. Proces og ramme ------------------------------------------------ -->
   {
     page.data.process.length > 0 && (
       <section id="proces" class="band">
@@ -107,7 +100,7 @@ const featured = cases.slice(0, 4);
         {
           page.data.ctaLabel && (
             <Reveal>
-              <a class="process-cta" href="/kontakt">{page.data.ctaLabel}</a>
+              <a class="button process-cta" href="/kontakt">{page.data.ctaLabel}</a>
             </Reveal>
           )
         }
@@ -115,7 +108,17 @@ const featured = cases.slice(0, 4);
     )
   }
 
-  <!-- 4. Om ------------------------------------------------------------ -->
+  <!-- 4. Ydelser ------------------------------------------------------- -->
+  <section id="ydelser" class="band">
+    <Reveal class="band-head">
+      <h2 class="eyebrow">Hvad jeg kan hjælpe med</h2>
+    </Reveal>
+    <Reveal delay={100}>
+      <Services items={page.data.services} />
+    </Reveal>
+  </section>
+
+  <!-- 5. Om ------------------------------------------------------------ -->
   <section id="om" class="band about">
     <Reveal class="band-head">
       <h2 class="eyebrow">Om mig</h2>
@@ -147,7 +150,7 @@ const featured = cases.slice(0, 4);
     }
   </section>
 
-  <!-- 5. Kontakt ------------------------------------------------------- -->
+  <!-- 6. Kontakt ------------------------------------------------------- -->
   <section id="kontakt" class="band contact">
     <Reveal class="band-head">
       <h2 class="eyebrow">Kontakt</h2>
@@ -155,7 +158,10 @@ const featured = cases.slice(0, 4);
     <Reveal>
       {page.data.contactHeading && <p class="contact-heading display">{page.data.contactHeading}</p>}
       {page.data.contactText && <p class="contact-text">{page.data.contactText}</p>}
-      <a class="mail" href={`mailto:${settings.email}`}>{settings.email}</a>
+      <div class="contact-actions">
+        {page.data.ctaLabel && <a class="button" href="/kontakt">{page.data.ctaLabel}</a>}
+        <a class="mail" href={`mailto:${settings.email}`}>{settings.email}</a>
+      </div>
     </Reveal>
   </section>
 </BaseLayout>
@@ -186,6 +192,12 @@ const featured = cases.slice(0, 4);
     max-width: 52ch;
     color: var(--color-muted);
     line-height: 1.65;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-8);
   }
   .hero-cta {
     display: inline-flex;
@@ -242,18 +254,7 @@ const featured = cases.slice(0, 4);
     color: var(--color-muted);
     max-width: 28ch;
   }
-  .process-cta {
-    display: inline-flex;
-    margin-top: var(--space-16);
-    padding: var(--space-4) var(--space-8);
-    border-radius: 999px;
-    background: var(--color-ink);
-    color: var(--color-paper);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    transition: opacity var(--duration-fast) ease;
-  }
-  .process-cta:hover { opacity: 0.82; }
+  .process-cta { margin-top: var(--space-16); }
 
   /* Om ---------------------------------------------------------------- */
   .about-grid {
@@ -304,19 +305,25 @@ const featured = cases.slice(0, 4);
   }
   .mail {
     display: inline-block;
-    font-family: var(--font-display);
     max-width: 100%;
-    font-size: clamp(1.5rem, 7vw, var(--text-4xl));
+    font-size: var(--text-md);
     overflow-wrap: anywhere;
-    line-height: 1;
-    letter-spacing: -0.02em;
+    color: var(--color-muted);
     background-image: linear-gradient(currentColor, currentColor);
     background-size: 0% 1px;
     background-repeat: no-repeat;
     background-position: 0 100%;
-    transition: background-size var(--duration-slow) var(--ease-out-soft);
+    transition:
+      background-size var(--duration-slow) var(--ease-out-soft),
+      color var(--duration-fast) ease;
   }
-  .mail:hover { background-size: 100% 1px; }
+  .mail:hover { background-size: 100% 1px; color: var(--color-ink); }
+  .contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4) var(--space-8);
+  }
 
   @media (max-width: 800px) {
     .about-grid { grid-template-columns: 1fr; gap: var(--space-12); }
