@@ -18,19 +18,19 @@ jobs:
       - name: Hent koden
         uses: actions/checkout@v4
 
-      - name: Opsaet Node
+      - name: Opsæt Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      - name: Installer afhaengigheder
+      - name: Installer afhængigheder
         run: npm ci
 
       - name: Byg
         run: npm run build
 
-      - name: Opsaet SSH-noegle
+      - name: Opsæt SSH-nøgle
         env:
           SSH_KEY: ${{ secrets.SIMPLY_SSH_KEY }}
         run: |
@@ -39,9 +39,9 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ssh.simply.com >> ~/.ssh/known_hosts
 
-      # Spaerre. rsync koerer med --delete, saa en forkert sti kunne rydde
-      # naboprojekter. Tre tjek skal passere foer der roeres ved serveren.
-      - name: Kontroller deploy-maal
+      # Spærre. rsync kører med --delete, så en forkert sti kunne rydde
+      # naboprojekter. Tre tjek skal passere før der røres ved serveren.
+      - name: Kontroller deploy-mål
         env:
           SIMPLY_USER: ${{ secrets.SIMPLY_USER }}
           SIMPLY_PATH: ${{ secrets.SIMPLY_PATH }}
@@ -53,33 +53,33 @@ jobs:
             exit 1
           fi
 
-          # Normaliser: fjern alle afsluttende skraastreger.
+          # Normaliser: fjern alle afsluttende skråstreger.
           TARGET="${SIMPLY_PATH%"${SIMPLY_PATH##*[!/]}"}"
 
           case "$TARGET" in
             /*) ;;
-            *) echo "::error::SIMPLY_PATH skal vaere en absolut sti: $SIMPLY_PATH"; exit 1 ;;
+            *) echo "::error::SIMPLY_PATH skal være en absolut sti: $SIMPLY_PATH"; exit 1 ;;
           esac
 
           # Tjek 1: mindst fire niveauer dybt. Blokerer /, /var, /var/www
-          # og kontoens rodmappe /var/www/<domaene>, hvor naboprojekterne ligger.
+          # og kontoens rodmappe /var/www/<domæne>, hvor naboprojekterne ligger.
           DEPTH=$(printf '%s' "${TARGET#/}" | awk -F/ '{print NF}')
           if [ "$DEPTH" -lt 4 ]; then
-            echo "::error::SIMPLY_PATH er for taet paa roden og kunne ramme andre projekter: $TARGET"
+            echo "::error::SIMPLY_PATH er for tæt på roden og kunne ramme andre projekter: $TARGET"
             exit 1
           fi
 
-          # Tjek 2: markoerfilen skal findes i maalmappen. Er stien forkert,
-          # findes filen ikke, og deploy stopper foer rsync overhovedet starter.
+          # Tjek 2: markørfilen skal findes i målmappen. Er stien forkert,
+          # findes filen ikke, og deploy stopper før rsync overhovedet starter.
           if ! ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes \
                  "$SIMPLY_USER@ssh.simply.com" "test -f '$TARGET/.deploy-ok'"; then
-            echo "::error::Markoerfilen .deploy-ok findes ikke i $TARGET. Deploy afbrudt."
+            echo "::error::Markørfilen .deploy-ok findes ikke i $TARGET. Deploy afbrudt."
             echo "Opret den med: ssh $SIMPLY_USER@ssh.simply.com \"touch $TARGET/.deploy-ok\""
             exit 1
           fi
 
           echo "DEPLOY_TARGET=$TARGET" >> "$GITHUB_ENV"
-          echo "Maal godkendt: $TARGET"
+          echo "Mål godkendt: $TARGET"
 
       - name: Upload til Simply
         env:

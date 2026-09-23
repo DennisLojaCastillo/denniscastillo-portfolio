@@ -37,19 +37,19 @@ const pages = defineCollection({
     title: z.string(),
     description: z.string().optional(),
 
-    // Felter herunder bruges kun af forsiden. De oevrige sider har titel,
-    // beskrivelse og broedtekst, og lader resten staa tomt.
+    // Felter herunder bruges kun af forsiden. De øvrige sider har titel,
+    // beskrivelse og brødtekst, og lader resten stå tomt.
     /** Lille linje over overskriften. Fx din rolle. */
     eyebrow: z.string().optional(),
     heroTitle: z.string().optional(),
     heroLead: z.string().optional(),
     heroText: z.string().optional(),
     ctaLabel: z.string().optional(),
-    /** Tom eller udeladt betyder at maerket i headeren ikke vises. */
+    /** Tom eller udeladt betyder at mærket i headeren ikke vises. */
     availability: z.string().optional(),
     portrait: z.string().optional(),
     portraitAlt: z.string().optional(),
-    /** Tre korte linjer om hvad du loeser for kunden. */
+    /** Tre korte linjer om hvad du løser for kunden. */
     services: z
       .array(z.object({ title: z.string(), text: z.string().optional() }))
       .default([]),

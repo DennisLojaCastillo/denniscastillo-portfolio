@@ -3,8 +3,8 @@
 # 1. Brug vores egen 404-side i stedet for Apaches standard.
 ErrorDocument 404 /404.html
 
-# 2. Testmiljoet maa ikke indekseres. Reglen rammer kun hostnavne der
-#    starter med "new.", saa produktionsdomaenet er upaavirket og
+# 2. Testmiljøet må ikke indekseres. Reglen rammer kun hostnavne der
+#    starter med "new.", så produktionsdomænet er upåvirket og
 #    ingen skal huske at fjerne noget ved lancering.
 <IfModule mod_setenvif.c>
   SetEnvIf Host "^new\." NOINDEX=1
@@ -13,8 +13,8 @@ ErrorDocument 404 /404.html
   Header set X-Robots-Tag "noindex, nofollow" env=NOINDEX
 </IfModule>
 
-# 3. Komprimering, og lang cache paa de hashede assets i _astro/.
-#    HTML caches ikke, saa en ny deploy slaar igennem med det samme.
+# 3. Komprimering, og lang cache på de hashede assets i _astro/.
+#    HTML caches ikke, så en ny deploy slår igennem med det samme.
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/css text/xml text/plain \
     application/javascript application/json image/svg+xml

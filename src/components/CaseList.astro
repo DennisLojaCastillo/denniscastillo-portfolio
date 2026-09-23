@@ -23,7 +23,7 @@ const { items } = Astro.props;
     }
   </ul>
 
-  <!-- Billedet der foelger markoeren. Skjult indtil en raekke roeres. -->
+  <!-- Billedet der følger markøren. Skjult indtil en række røres. -->
   <div class="peek" data-peek aria-hidden="true"></div>
 </div>
 
@@ -45,7 +45,7 @@ const { items } = Astro.props;
   }
   li:hover a { transform: translateX(1.25rem); }
 
-  /* Naar markoeren er over listen, traeder de oevrige titler tilbage. */
+  /* Når markøren er over listen, træder de øvrige titler tilbage. */
   ul:hover .title { opacity: 0.3; }
   li:hover .title { opacity: 1; }
 
@@ -134,7 +134,7 @@ const { items } = Astro.props;
         row.addEventListener('mouseleave', () => peek.classList.remove('on'));
       });
 
-      // Stopper animationsloekken naar musen forlader hele listen.
+      // Stopper animationsløkken når musen forlader hele listen.
       list.addEventListener('mouseleave', stop);
 
       window.addEventListener('mousemove', (e) => {

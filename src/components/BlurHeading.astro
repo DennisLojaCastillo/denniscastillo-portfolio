@@ -32,8 +32,8 @@ const words = text.split(' ');
   }
   .word {
     display: inline-block;
-    /* Lineaer, ikke ease-out. Med en haard ease-out er ordet paa plads laenge
-       foer blurren er vaek, og bevaegelsen knaekker i to. */
+    /* Lineær, ikke ease-out. Med en hård ease-out er ordet på plads længe
+       før blurren er væk, og bevægelsen knækker i to. */
     animation: word-in 0.8s linear backwards;
     animation-delay: var(--delay);
     will-change: transform, filter, opacity;

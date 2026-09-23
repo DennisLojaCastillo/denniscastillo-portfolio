@@ -20,7 +20,7 @@ if (trim((string) ($_POST['website'] ?? '')) !== '') {
     retur(RETUR_OK);
 }
 
-// Formularer udfyldt paa under tre sekunder er naesten altid automatiserede.
+// Formularer udfyldt på under tre sekunder er næsten altid automatiserede.
 $tid = (int) ($_POST['tid'] ?? 0);
 if ($tid > 0 && (int) round(microtime(true) * 1000) - $tid < 3000) {
     retur(RETUR_OK);
@@ -38,7 +38,7 @@ if (mb_strlen($navn) > 120 || mb_strlen($besked) > 5000) {
     retur(RETUR_FEJL);
 }
 
-// Header injection: nylinjer i navn eller email maa aldrig naa headerne.
+// Header injection: nylinjer i navn eller email må aldrig nå headerne.
 if (preg_match('/[\r\n]/', $navn . $email)) {
     retur(RETUR_FEJL);
 }
