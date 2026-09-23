@@ -138,6 +138,24 @@ main > section {
   .band-head { margin-bottom: var(--space-12); }
 }
 
+/* Afstand mellem cases i en liste. Margin sidder på Reveal-wrapperen,
+   da hver case er pakket ind i én. Uden cover er en case kun tekst, og
+   den store afstand virker tom. */
+.case-item + .case-item { margin-top: var(--space-32); }
+.case-item:not(:has(.cover)) + .case-item:not(:has(.cover)) { margin-top: var(--space-16); }
+@media (max-width: 700px) {
+  .case-item + .case-item { margin-top: var(--space-24); }
+  .case-item:not(:has(.cover)) + .case-item:not(:has(.cover)) { margin-top: var(--space-12); }
+}
+
+/* Brødtekst fra Markdown, fx case-overblik og bio. */
+.prose p {
+  margin: 0 0 var(--space-4);
+  max-width: 62ch;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+
 /* Primær knap. Samme form som CTA'en i headeren, bare større. */
 .button {
   display: inline-flex;

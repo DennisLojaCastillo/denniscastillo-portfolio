@@ -1,15 +1,166 @@
 ---
 import { getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Reveal from '../components/Reveal.astro';
 
 const page = await getEntry('pages', 'om');
 if (!page) throw new Error('src/content/pages/om.md mangler');
+const d = page.data;
 const { Content } = await render(page);
 ---
 
-<BaseLayout title={page.data.title} description={page.data.description}>
-  <h1 class="mb-10 text-3xl font-medium tracking-tight">{page.data.title}</h1>
-  <div class="prose-sm max-w-none">
-    <Content />
-  </div>
+<BaseLayout title={d.title} description={d.description} ctaLabel={d.ctaLabel}>
+  <PageHero title={d.heroTitle ?? d.title} eyebrow={d.eyebrow} />
+
+  <section class="band">
+    <div class="bio">
+      <Reveal class="bio-text">
+        {d.introHeading && <h2 class="bio-heading display">{d.introHeading}</h2>}
+        {d.introText && <p class="role eyebrow">{d.introText}</p>}
+        <div class="prose"><Content /></div>
+      </Reveal>
+      {
+        d.portrait && (
+          <Reveal delay={120}>
+            <img class="portrait" src={d.portrait} alt={d.portraitAlt ?? ''} width="720" height="900" loading="lazy" decoding="async" />
+          </Reveal>
+        )
+      }
+    </div>
+  </section>
+
+  {
+    d.skills.length > 0 && (
+      <section class="band">
+        <Reveal class="band-head">
+          <h2 class="eyebrow">Teknologier &amp; kompetencer</h2>
+        </Reveal>
+        <div class="skills">
+          {d.skills.map((s, i) => (
+            <Reveal delay={(i % 3) * 80}>
+              <h3 class="skill-title">{s.title}</h3>
+              {s.text && <p class="skill-text">{s.text}</p>}
+              {s.items.length > 0 && (
+                <ul class="skill-items">
+                  {s.items.map((it) => <li>{it}</li>)}
+                </ul>
+              )}
+            </Reveal>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    d.timeline.length > 0 && (
+      <section class="band">
+        <Reveal class="band-head">
+          <h2 class="eyebrow">Uddannelse &amp; erfaring</h2>
+        </Reveal>
+        <ol class="timeline">
+          {d.timeline.map((t) => (
+            <li>
+              {t.period && <span class="period eyebrow">{t.period}</span>}
+              <div>
+                <h3 class="tl-title display">{t.title}</h3>
+                {t.text && <p>{t.text}</p>}
+              </div>
+            </li>
+          ))}
+        </ol>
+        {d.ctaLabel && (
+          <Reveal>
+            <a class="button cta" href="/kontakt/">{d.ctaLabel}</a>
+          </Reveal>
+        )}
+      </section>
+    )
+  }
 </BaseLayout>
+
+<style>
+  .bio {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--space-16);
+    align-items: start;
+  }
+  .bio-heading {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-3xl);
+    max-width: 18ch;
+  }
+  .role { margin: 0 0 var(--space-8); }
+  .portrait {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--space-3);
+  }
+
+  .skills {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: var(--space-12) var(--space-12);
+  }
+  .skill-title {
+    margin: 0 0 var(--space-3);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-line);
+    font-size: var(--text-lg);
+    font-weight: 500;
+    letter-spacing: -0.018em;
+  }
+  .skill-text {
+    margin: 0 0 var(--space-4);
+    color: var(--color-muted);
+    line-height: 1.65;
+  }
+  .skill-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .skill-items li {
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+    border: 1px solid var(--color-line);
+    border-radius: 999px;
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .timeline li {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--space-4) var(--space-16);
+    padding: var(--space-8) 0;
+    border-top: 1px solid var(--color-line);
+  }
+  .period { padding-top: var(--space-2); }
+  .tl-title {
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-2xl);
+  }
+  .timeline p {
+    margin: 0;
+    max-width: 56ch;
+    color: var(--color-muted);
+    line-height: 1.65;
+  }
+  .cta { margin-top: var(--space-12); }
+
+  @media (max-width: 800px) {
+    .bio { grid-template-columns: 1fr; gap: var(--space-12); }
+    .timeline li { grid-template-columns: 1fr; }
+  }
+</style>

@@ -1,27 +1,37 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Reveal from '../components/Reveal.astro';
+import CaseFeature from '../components/CaseFeature.astro';
 
 const cases = (await getCollection('cases', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order
 );
 ---
 
-<BaseLayout title="Cases" description="Udvalgte opgaver.">
-  <h1 class="mb-10 text-3xl font-medium tracking-tight">Cases</h1>
-  <ul class="divide-y divide-[--color-line] border-y border-[--color-line]">
+<BaseLayout
+  title="Portfolio"
+  description="Hvert projekt tager udgangspunkt i en konkret udfordring og kombinerer design, teknologi og brugeroplevelse."
+  ctaLabel="Start projekt"
+>
+  <PageHero
+    title="Digitale løsninger skabt til at gøre en forskel"
+    eyebrow="Seneste projekter"
+    lead="Hvert projekt tager udgangspunkt i en konkret udfordring og kombinerer design, teknologi og brugeroplevelse. Fokus er på at skabe gennemarbejdede, skalerbare og visuelt stærke digitale løsninger."
+  />
+
+  <section class="band work">
     {
-      cases.map((item) => (
-        <li>
-          <a href={`/cases/${item.id}`} class="block py-6">
-            <div class="flex items-baseline justify-between gap-6">
-              <h2 class="font-medium">{item.data.title}</h2>
-              <span class="text-sm text-[--color-muted]">{item.data.year}</span>
-            </div>
-            {item.data.excerpt && <p class="mt-2 text-sm text-[--color-muted]">{item.data.excerpt}</p>}
-          </a>
-        </li>
+      cases.map((item, i) => (
+        <Reveal class="case-item">
+          <CaseFeature item={item} index={i} />
+        </Reveal>
       ))
     }
-  </ul>
+  </section>
 </BaseLayout>
+
+<style>
+  .work { padding-bottom: var(--space-32); }
+</style>

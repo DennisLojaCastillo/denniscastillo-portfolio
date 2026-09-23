@@ -21,12 +21,23 @@ content:
       - { name: year, label: År, type: number }
       - { name: order, label: Rækkefølge, type: number, description: "Lavest tal vises først" }
       - { name: services, label: Ydelser, type: string, list: true }
+      - { name: type, label: Type, type: string, description: "Fx 'UX/UI Design & WordPress'" }
+      - { name: industry, label: Industri, type: string }
+      - { name: tags, label: Tags, type: string, list: true }
       - { name: excerpt, label: Uddrag, type: text }
       - { name: cover, label: Cover, type: image }
       - { name: gallery, label: Galleri, type: image, list: true }
-      - { name: url, label: Live-link, type: string }
+      - { name: url, label: Live-link, type: string, description: "Knappen 'Se resultatet'" }
+      - { name: challenge, label: "Udfordringen & Løsningen", type: text, list: true }
+      - name: testimonial
+        label: Udtalelse fra kunden
+        type: object
+        fields:
+          - { name: quote, label: Citat, type: text }
+          - { name: name, label: Navn, type: string }
+          - { name: role, label: Titel, type: string }
       - { name: draft, label: Kladde, type: boolean }
-      - { name: body, label: Indhold, type: rich-text }
+      - { name: body, label: Projekt overblik, type: rich-text }
 
   - name: services
     label: Services
@@ -199,14 +210,41 @@ content:
       - { name: ctaLabel, label: Knaptekst, type: string }
 
   - name: om
-    label: Om
+    label: Om mig
     type: file
     path: src/content/pages/om.md
     format: yaml-frontmatter
     fields:
       - { name: title, label: Titel, type: string, required: true }
       - { name: description, label: SEO-beskrivelse, type: text }
-      - { name: body, label: Indhold, type: rich-text }
+      - { name: eyebrow, label: Lille linje over overskriften, type: string }
+      - { name: heroTitle, label: Overskrift, type: string }
+      - { name: introHeading, label: Bio, overskrift, type: string }
+      - { name: introText, label: Rolle, type: string }
+      - { name: portrait, label: Portræt, type: image }
+      - { name: portraitAlt, label: Alt-tekst til portræt, type: string }
+      - { name: body, label: Bio, type: rich-text }
+      - name: skills
+        label: Teknologier & kompetencer
+        type: object
+        list:
+          collapsible:
+            summary: "{fields.title}"
+        fields:
+          - { name: title, label: Titel, type: string }
+          - { name: text, label: Tekst, type: text }
+          - { name: items, label: Punkter, type: string, list: true }
+      - name: timeline
+        label: Uddannelse & erfaring
+        type: object
+        list:
+          collapsible:
+            summary: "{fields.title}"
+        fields:
+          - { name: title, label: Titel, type: string }
+          - { name: period, label: Periode, type: string, description: "Fx 2022-2024" }
+          - { name: text, label: Tekst, type: text }
+      - { name: ctaLabel, label: Knaptekst, type: string }
 
   - name: kontakt
     label: Kontakt

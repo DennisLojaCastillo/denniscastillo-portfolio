@@ -11,7 +11,15 @@ const cases = defineCollection({
     order: z.number().default(0),
     services: z.array(z.string()).default([]),
     tags: z.array(z.string()).default([]),
+    /** Meta-rækken på case-siden: Type og Industri. Kunde og år er client og year. */
+    type: z.string().optional(),
+    industry: z.string().optional(),
     excerpt: z.string().optional(),
+    /** "Udfordringen & Løsningen". Brødteksten er projektoverblikket. */
+    challenge: z.array(z.string()).default([]),
+    testimonial: z
+      .object({ quote: z.string(), name: z.string(), role: z.string().optional() })
+      .optional(),
     cover: z.string().optional(),
     gallery: z.array(z.string()).default([]),
     url: z.string().optional(),
@@ -90,6 +98,14 @@ const pages = defineCollection({
     aboutLead: z.string().optional(),
     aboutText: z.array(z.string()).default([]),
     quote: z.string().optional(),
+    /** Kompetencer på Om mig: titel, kort tekst og en liste. */
+    skills: z
+      .array(z.object({ title: z.string(), text: z.string().optional(), items: z.array(z.string()).default([]) }))
+      .default([]),
+    /** Uddannelse og erfaring, nyeste eller vigtigste først. */
+    timeline: z
+      .array(z.object({ title: z.string(), period: z.string().optional(), text: z.string().optional() }))
+      .default([]),
     /** Spørgsmål og svar, grupperet i kategorier. Bruges af FAQ-siden. */
     faq: z
       .array(
